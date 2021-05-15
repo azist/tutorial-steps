@@ -1,0 +1,5 @@
+﻿<push><b color=black><f color=white>Azos Tutorial Step 1<f color=gray>
+Copyright (c) 2019-2021 Azist Group
+<f color=green>This is an example of how to change colors using markup
+
+<pop>

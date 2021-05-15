@@ -1,0 +1,27 @@
+<Project>
+
+  <PropertyGroup>
+    <Version>0.0.1</Version>
+
+    <!-- To copy referenced packages into /out -->
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+
+    <PreserveCompilationContext>false</PreserveCompilationContext>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <NoWarn>1701;1702;1705;1591;649</NoWarn>
+
+
+    <Authors>Azist</Authors>
+    <Company>Azist Group</Company>
+    <Description>AZOS - A to Z Application OS</Description>
+    <Copyright>2021 Azist Group</Copyright>
+    <PackageProjectUrl>http://zhabis.com/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/azist/tutorial-steps</RepositoryUrl>
+    <RepositoryType>GIT</RepositoryType>
+    <PackageTags>azos tutorial</PackageTags>
+    <PackageLicenseUrl>https://github.com/azist/tutorial-steps</PackageLicenseUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/azist/azos/master/elm/logo/logo.50.png</PackageIconUrl>
+    <PackageReleaseNotes>Azos Tutorial</PackageReleaseNotes>
+  </PropertyGroup>
+
+</Project>
