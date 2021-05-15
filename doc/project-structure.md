@@ -1,6 +1,6 @@
 # Project Structure Recap 
 
-This section must be carefully studied to eliminate many problems during dev and DevOps activities
+This section must be carefully reviewed to eliminate many problems during dev and DevOps activities
 in the future.
 
 This is just a recap. See Azos repository for standards/conventions details.
