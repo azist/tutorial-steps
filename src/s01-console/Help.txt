@@ -1,0 +1,16 @@
+﻿<push><b color=black><f color=white>Azos Tutorial Step 1<f color=gray>
+Copyright (c) 2019-2021 Azist Group
+<f color=green>This is an example of how to change colors using markup<f color=gray>
+
+This is an example of writing a help file:
+
+The console markup files are somewhat similar to HTML. They can be rendered either into
+console object (coloring the output), or into HTML which is handy for WEB-consoles.
+
+You can change <f color=magenta>colors<f color=gray>, <b color=green>spacing<b color=black>, justification
+
+See <f color=cyan>`ConsoleUtils.WriteMarkupContent()`<f color=gray> function in Azos
+
+
+
+<pop>

@@ -17,10 +17,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Help.txt" />
     <None Remove="Welcome.txt" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Help.txt" />
     <EmbeddedResource Include="Welcome.txt" />
   </ItemGroup>
 

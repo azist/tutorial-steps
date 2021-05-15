@@ -8,15 +8,16 @@ using System;
 
 using Azos;
 using Azos.Apps;
+using Azos.Conf;
 using Azos.IO.Console;
 using Azos.Platform;
 
 namespace s01_console
 {
-  class Program
+  public class Program
   {
     //Process entry point
-    private static int Main(string[] args)
+    public static int Main(string[] args)
     {
       try
       {
@@ -43,15 +44,43 @@ namespace s01_console
     //The app chassis is OK
     private static int main(IApplication app)
     {
-      ConsoleUtils.WriteMarkupContent(typeof(Program).GetText("Welcome.txt")); //read markup from embedded resource
+      //if help was requested then show it and exit
+      if (app.CommandArgs["?", "h", "help"].Exists)//if any of these switches passed
+      {
+        ConsoleUtils.WriteMarkupContent(typeof(Program).GetText("Help.txt")); //read markup from embedded resource
+        return 0;
+      }
 
-      ConsoleUtils.Info($"Id: {app.AppId}");
-      ConsoleUtils.Info($"Name: {app.Name}");
-      ConsoleUtils.Info($"Description: {app.Description}");
-      ConsoleUtils.Warning($"Environment: {app.EnvironmentName}");
+      var isSilent = app.CommandArgs["s", "silent"].Exists; // `-s` or `-silent` switch in the root
 
+      if (!isSilent)
+      {
+        ConsoleUtils.WriteMarkupContent(typeof(Program).GetText("Welcome.txt")); //read markup from embedded resource
+        ConsoleUtils.Info($"Id: {app.AppId}");
+        ConsoleUtils.Info($"Name: {app.Name}");
+        ConsoleUtils.Info($"Description: {app.Description}");
+        ConsoleUtils.Warning($"Environment: {app.EnvironmentName}");
+        ConsoleUtils.Info($"Here is how your command arguments look: \n\n{app.CommandArgs.ToLaconicString()}\n\n");
+        ConsoleUtils.Info($"Started at: {app.TimeSource.UTCNow} UTC");
+      }
 
-      return 0;
+      //Get a reference to `-work` command line switch which contains
+      // attributes, e.g. a type looks like `-work type="........"` this way
+      //we can inject object types implementing the `Work` contract
+      var workConf = app.CommandArgs[Work.CONFIG_WORK_SECTION];
+
+      //Polymorphism: inject dependency using `type=FQN` syntax
+      var work = FactoryUtils.MakeAndConfigure<Work>(workConf, typeof(DefaultWork));//if `type` was not supplied, use `DefaultWork`
+
+      //Polymorphism: what is done depends on the actual type of work object
+      var result = work.Perform(); //<---- PERFORM ACTUAL WORK
+
+      if (!isSilent)
+      {
+        ConsoleUtils.Info($"Finished at: {app.TimeSource.UTCNow} UTC");
+      }
+
+      return result;
     }
   }
 }
