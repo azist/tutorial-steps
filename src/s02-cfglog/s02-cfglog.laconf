@@ -14,16 +14,20 @@
 */
 app
 {
-  id=s01
+  id=s02
   name="s02-cfglog"
-  description="My application description"
+  description="My config and logging test application"
 
-  // Any attribute may be referenced as a variable using $(<path>) syntax.
-  // Example, alias to `name` above: `$(/$name)` slash = root, $ = attribute etc.
-  // Machine environment variable names start with `~`, e.g. $(~PATH) will be expanded to system path
 
-  // You could use machine env variable reference like this: $(~MYAPP_ENV_NAME)
-  environment-name="PROD"
-
-  //Configure you app chassis container here
+  //declare app logging
+  log
+  {
+    //this example will log only to console, so we have 1 sink
+    sink
+    {
+      name="console" //a good practice is to name sinks, so they can be better identified
+      type="Azos.Log.Sinks.ConsoleSink, Azos"//we specify the type od Sink
+      colored=true  //the rest of sink's properties depend on sink, e.g. `ConsoleSink.Colored`
+    }
+  }
 }
