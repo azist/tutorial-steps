@@ -51,6 +51,9 @@ namespace s01_console
         return 0;
       }
 
+      //The [] accessor coalesces sub-section names from left to right
+      //until a section with such name is found. If nothing found then
+      //a special "Nonexistent" sentinel node section is returned
       var isSilent = app.CommandArgs["s", "silent"].Exists; // `-s` or `-silent` switch in the root
 
       if (!isSilent)
