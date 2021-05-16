@@ -1,9 +1,9 @@
 ﻿# Step 1 - CLI (Command Line Interface)
 
-This is the very first step. We are going to build a CLI - command line interface app which takes input from
-the command line args. We need to first re-visit the conventions of project organization.
+We are going to build a CLI - [c]ommand [l]ine [i]nterface app which takes input from
+the command line arguments. 
 
-> If you have not done so yet, we strongly recommend that you review 
+> We strongly recommend that you review 
 [Project Structure Recap](/doc/project-structure.md) first
 
 
@@ -13,14 +13,14 @@ Non-zero return values typically denote various error conditions. See [Main() re
 
 The example demonstrates a typical pattern with `try/catch` - if something happens in the program body
 we will show exception name and return `-1` instead of crashing the process. The actual work is delegated into 
-`main(app)` call. What can go wrong:
-* An attempt to mount application chassis `new AzosApplication()` may fail because configuration file may be wrong
+`main(app)` call. Many things can go wrong, for example:
+* An attempt to mount application chassis `new AzosApplication()` may fail because configuration file may be invalid
 * Some unhandled error may happen in `main()`
 
 The application container/chassis initializes all services (such as DI, config, logging etc..) as
 prescribed in the configuration file. The application config file is taken from the same path where executable is
 the project includes a file `*.laconf` which has its build action set to "Copy to Output". This way, the config file
-is auto-copied by the build process automatically. Unlike complex legacy "App.config"-based solution provided by legacy .NET
+is copied by the build process automatically. Unlike complex legacy "App.config"-based solution provided by legacy .NET
 framework, Azos config files are not processed by any tool and copied to output as-is which significantly simplifies
 configuration aspect, however Azos configuration format is much more powerful (e.g. support for variables, macros) which
 makes DevOps tasks simpler. We will look at Azos configuration in the next tutorial steps.
@@ -41,14 +41,14 @@ We then dump app information into console. Pay attention to the line which print
 The info dump is performed unless `silent` switch is present. It is a typical console app design to suppress "logo"
 and other verbose messages. In Unix-like operating systems many system programs (e.g. `awk`, `grep`, `sed` etc.) are 
 "piped" into each other forming complex CLI processing conveyors. A "silent" switch may be needed to suppress
-info messages which would have prevented utility conveyor composition.
+info messages which would have prevented the possibility of utility conveyor composition.
 
 The next step illustrates command args-driven dependency injection.
 This pattern is very much needed in many complex command-line tools, e.g. in compilers and transformations where
 the actual work is not hard-coded but rather delegated into another entity.
-We have abstracted a unit of some work using  an  `Work` abstraction. See [Work.cs](Work.cs).
-The class saves as a base with abstract `Perform()` method. It is a `IConfigurable`-implementor it applies
-config optons from supplied config section into the instance. We then allocate and configure a specific instance of the
+We have abstracted a unit of some work using a `Work` abstraction. See [Work.cs](Work.cs).
+The class serves as a base with abstract `Perform()` method. It is a `IConfigurable`-implementor: it applies
+config options from the supplied config section into its object instance. We then allocate and configure a specific instance of the
 `Work`-derived class with one line:
 ```csharp
  //Polymorphism: inject dependency using `type=FQN` syntax
@@ -92,4 +92,7 @@ Notice how the classes derived from `Work` can consume their properties from con
   public int From { get; set; }
 ```
 The system would bind the value automatically be it app config or command lines arguments.
+
+As illustrated above, the framework performs a lot of boilerplate plumbing. App chassis provides logical container isolation 
+of your app instance which is the application composition root.
 
