@@ -1,0 +1,29 @@
+﻿/*
+  This is an example of configuration file written in Laconic format.
+  Laconic format is much easier to use than JSON or XML.
+
+  This file gets read automatically by IApplication chassis when you mount it (constructor call).
+  The file is typically in the project root and has a build action set to "Copy Always".
+  The file has to have the same name as the resulting executable (or dll) if you want the app
+  to automatically find it.
+
+  You can run any application with a different file by using a `-config` switch, for example:
+
+  # This will use another.json config file
+  $ dotnet myprogram.dll -config another.json
+*/
+app
+{
+  id=s01
+  name="s02-cfglog"
+  description="My application description"
+
+  // Any attribute may be referenced as a variable using $(<path>) syntax.
+  // Example, alias to `name` above: `$(/$name)` slash = root, $ = attribute etc.
+  // Machine environment variable names start with `~`, e.g. $(~PATH) will be expanded to system path
+
+  // You could use machine env variable reference like this: $(~MYAPP_ENV_NAME)
+  environment-name="PROD"
+
+  //Configure you app chassis container here
+}
