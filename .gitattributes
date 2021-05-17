@@ -5,3 +5,5 @@
 *.json eol==lf
 *.yml eol==lf
 *.rschema eol=lf linguist-language=C#
+*.png binary
+*.jpg binary
