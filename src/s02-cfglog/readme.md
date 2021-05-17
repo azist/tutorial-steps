@@ -12,4 +12,4 @@ When you run the application:
 
 The following output is produced:
 
-<img src="img/screen01.png">
+<img src="img/screen01.png" height="300px">
