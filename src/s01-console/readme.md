@@ -1,4 +1,4 @@
-﻿# Step 1 - CLI (Command Line Interface)
+﻿# Step 1 - Console/CLI (Command Line Interface) Applications
 
 We are going to build a CLI - [c]ommand [l]ine [i]nterface app which takes input from
 the command line arguments. 
@@ -6,6 +6,15 @@ the command line arguments.
 > We strongly recommend that you review 
 [Project Structure Recap](/doc/project-structure.md) first
 
+> **WHY Console Applications?** - because 99.9% of modern cloud development is
+writing server applications which consume STDIO (standard in/out) via CLI (command line interface).
+ You run CLI apps from console, just by typing their name. On Linux you can "daemonize"
+ these apps by adding them into Linux run system (e.g. systemctl/upstart etc.)
+ Long gone are the days of IIS, WinForms and other Windows-only technologies.
+ Modern apps are typically written as CLI entry points which get deployed in a Docker (systemd)
+ container. When container "runs" - your entry point is called. Container applications
+ run on Linux natively (no emulaition/WSL/Hypervisor needed). Modern .NET Core/5+
+ runs on Linux natively as well
 
 We start at the entry point [`Program.cs`](Program.cs) method `int Main(string[] args)` which
 takes command line arguments as supplied by the operating system, and returns a code back to the operating system.
