@@ -42,6 +42,11 @@ be handled for you automatically by the "component loggers" as shown in `log_com
 The program declares a [`MyDemoComponent`](MyDemoComponent.cs) class which has no real
 functionality but a `Demonstrate()` method which uses **component logger**.
 
+Component loggers add necessary information to log messages (entries) which allow for future
+filtering and identification what **system/app/component/tracepoint generated every log entry**.
+This is especially important in distributed cloud APM solutions which perform cross-application
+cross-server aggregation of log data.
+
 > Application components are logical building blocks mounted in application container. Most services 
 > (e.g. a logger) are components. Components provide a uniform architectural pattern for 
 > business and system logic in a well-structured and manageable way. For example, components 
@@ -94,8 +99,8 @@ can get infinitly complex. Practice whos that logging to CSV text file and debug
 stable and good practice.
 
 ### How do you delete old log files/reclaim space?
-Use `FileDeleteJob` (see above), which runs in a built-in scheduler daemon which drops files.
-The `FileDeleteJob` works with **virtual file system** so it can clean you **Amazon S3 buckets**, local files,
+Use `DeleteFilesJob` (see above), which runs in a built-in scheduler daemon which drops files.
+The `DeleteFilesJob` works with **virtual file system** so it can clean you **Amazon S3 buckets**, local files,
 or whatever other fs you may want to work with.
 
 ### How do I archive old data?
