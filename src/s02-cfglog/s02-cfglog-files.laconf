@@ -1,0 +1,42 @@
+﻿
+//This is an example of app config which uses `_includes` and `machine` config
+//manifest which is host/computer dependent. During DevOps/Container publish
+//the machine file gets processed by the elevate tool (e.g. Octopus)
+app
+{
+  //Instruct the system to include file references in '_include' sections
+  //this way we do not need to re-declare many constituent parts of config
+  process-includes="_include"
+
+
+  //The machine config file is taken by default from `xyz-machine.{AZ_DEV_CONFIG_SUFFIX}.xml` unless
+  //an override is set for integration testing. The syntax below is based on config nav coalescing:
+  //the system tries to read from left to right tripping on a first value which exists
+  az-dev-config-suffix=$(~AZ_DEV_CONFIG_SUFFIX)
+  _include
+  {
+    name=machine //the referenced file as `machine` section instead of this `_include` section here
+    file="./machine$(/$az-dev-config-suffix-override;/$az-dev-config-suffix).xml"
+  }
+
+  //in server applications we want to use invariant culture across all code
+  //unless some specific places use culture for other purposes
+  force-invariant-culture=true
+
+
+
+  id=s02
+  name="s02-cfglog"
+  description="My config and logging test application" //access this `app.description`
+  copyright="Azos project" //access this `app.Copyright`
+  environment-name=$(machine/$environment-name)
+
+
+  //We want to reuse many parts of this config
+  //so we will start using includes
+  _include{ name=paths file="./cfg/paths.laconf"}
+
+  //We want to reuse many parts of this config
+  //so we will start using includes
+  _include{ name=log file="./cfg/log.laconf"}
+}

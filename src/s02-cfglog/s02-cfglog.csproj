@@ -22,6 +22,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="s02-cfglog-files.laconf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="s02-cfglog.laconf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

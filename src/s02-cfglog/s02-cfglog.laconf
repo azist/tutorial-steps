@@ -26,7 +26,7 @@ app
     sink
     {
       name="console" //a good practice is to name sinks, so they can be better identified
-      type="Azos.Log.Sinks.ConsoleSink, Azos"//we specify the type od Sink
+      type="Azos.Log.Sinks.ConsoleSink, Azos"//we specify the type of Sink
       colored=true  //the rest of sink's properties depend on sink, e.g. `ConsoleSink.Colored`
     }
   }
