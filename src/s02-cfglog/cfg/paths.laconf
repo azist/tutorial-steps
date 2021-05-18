@@ -1,0 +1,22 @@
+﻿//Various paths used across applications.
+//instead of hard-coding the paths all over the place, we declare all paths in one place here. This file then gets included in app config.
+//Now we can reference paths like so:
+//
+//    path=$(/paths/$log)
+//
+// Explanation:
+//  Whatever is between "$(" and ")" is treated as navigation path of the config root, so "/paths" navigates to
+//  sub-section "paths" under root "/" section, then "$log" is an attribute (a variable called "log") under that section "paths"
+//
+paths
+{
+  //take root home path from machine-dependent config
+  home=$(/machine/$home-path)
+
+  //we will dump all local logs under "logs" subdirectory
+  log-dir=logs
+
+  //Concatenate as path:  home + logs + {app.name}
+  //the '@' means "as path" to avoid unneeded slashes, e.g. "a/"+"/b" = "a/b"
+  log=$($home)$(@$log-dir)$(@/$name) // e.g. c:\apps\logs\s02-cfglog
+}

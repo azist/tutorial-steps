@@ -29,14 +29,17 @@ app
   name="s02-cfglog"
   description="My config and logging test application" //access this `app.description`
   copyright="Azos project" //access this `app.Copyright`
-  environment-name=$(machine/$environment-name)
+  environment-name=$(/machine/$environment-name)
 
 
-  //We want to reuse many parts of this config
-  //so we will start using includes
+  //We want to reuse many parts of this config so we will start using includes
+
+  //Common app paths
   _include{ name=paths file="./cfg/paths.laconf"}
 
-  //We want to reuse many parts of this config
-  //so we will start using includes
+  //Common app logging
   _include{ name=log file="./cfg/log.laconf"}
+
+  //Common app scheduler/jobs/timer
+  _include{ name=event-timer file="./cfg/event-timer.laconf"}
 }

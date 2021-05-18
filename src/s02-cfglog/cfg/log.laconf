@@ -1,0 +1,53 @@
+﻿log
+{
+  //Fail any sink over to the "fail" sink
+  default-failover="fail"
+
+  //We do not want to repeat this part in various type references down below,
+  //so we set it in the root of logging section for all child section down below
+  type-path="Azos.Log.Sinks, Azos"
+
+  sink
+  {
+    order=0 //if you do not specify order then the system will add sinks in the declaration order
+    name="memory"
+    description="This sink is used as a in-memory circular buffer for getting last X log messages, e.g. you can use it for web log view admin"
+    type="MemoryBufferSink" //the type name will be resolved using "type-path" specified above
+    buffer-size=1000 //log messages
+  }
+
+  sink
+  {
+    order=10
+    name="gen"//generic
+    description="Catch-all CSV text file sink easy to view"
+    type="SCVFileSink"
+    path=$(/paths/$log)
+    file-name="{0:yyyyMMdd}-$(/$name)-$($name).csv.log" //e.g.: 20210307-app1-gen.csv.log
+    levels="Debug-TraceZ | Info-" //all message levels except for "Instrumentation" which we don't want in this sink
+    generate-failover-msg=true //add additional log message when failure occurs here (e.g. SLA write exceeded)
+  }
+
+  sink
+  {
+    order=20
+    name="dbg"//debug
+    description="Debug details written to text file"
+    type="DebugSink"
+    path=$(/paths/$log)
+    file-name="{0:yyyyMMdd}-$(/$name)-$($name).log" //e.g.: 20210307-app1-dbg.log
+    min-level="Error" //only errors or worse!!!
+    generate-failover-msg=true //add additional log message when failure occurs here (e.g. SLA write exceeded)
+  }
+
+  sink
+  {
+    order=10000
+    name="fail"
+    only-failures=true//do not route any normal logging here, only other log failures get written here
+    type="CSVFileSink"
+    path=$(/paths/$log)
+    file-name="{0:yyyyMMdd}-$(/$name)-$($name).csv.log" //e.g.: 20210307-app1-fail.csv.log
+  }
+
+}
