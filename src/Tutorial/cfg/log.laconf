@@ -5,7 +5,10 @@
 
   //We do not want to repeat this part in various type references down below,
   //so we set it in the root of logging section for all child section down below
-  type-path="Azos.Log.Sinks, Azos"
+  type-path="Azos.Log.Sinks, Azos; Azos.Log.Filters, Azos"
+
+  //Do not stop until all queued messages get written into sinks
+  reliable="true"
 
   sink
   {
@@ -28,6 +31,30 @@
     generate-failover-msg=true //add additional log message when failure occurs here (e.g. SLA write exceeded)
   }
 
+  /*
+  //An example of setting custom filtering of log messages
+  sink
+  {
+    order=11
+    name="vegetarian"//as an example we are going to write messages which pass filter
+    description="Only messages which satisfy filter"
+    type="SCVFileSink"
+    path=$(/paths/$log)
+    file-name="{0:yyyyMMdd}-$(/$name)-$($name).csv.log"
+    generate-failover-msg=true
+    filter //<---- use expression tree with predicates
+    {
+      tree
+      {
+        type='And'
+        flesh="*meat*;*chicken*;*fish*;*poultry*"
+        left  { type='ByFrom' exclude=$(../$flesh) }
+        right { type='ByText' exclude=$(../$flesh) }
+      }
+    }
+  }
+  */
+
   sink
   {
     order=20
@@ -40,6 +67,75 @@
     generate-failover-msg=true //add additional log message when failure occurs here (e.g. SLA write exceeded)
   }
 
+  /*  An asynchronous sub-graph */
+  /* ====================================================================================================== */
+  sink
+  {
+    order=30
+    name="async-graph"
+    type="LoagDaemonSink" //this sink establishes its own async graph which is isolated from the parent
+    reliable=false//do not block on shutdown until queue is flushed
+    levels="Debug-TraceZ | Info-"//all except Instrumentation
+    default-failover="fail-inner"
+
+    sink
+    {
+      order=10
+      name="error-batcher"
+      type="FloodSink"//prevents flooding when too many errors happen
+      interval-sec=600 //once every 10 minutes
+      max-count=64 //no more than 64 errors per report
+      max-text-length=128000//no more than 128Kbytes in total size
+      min-level=Warning//Warning or worse
+
+      sink
+      {
+        name="smtp"
+        type="SmtpSink"
+        smtp-host=$(/machine/mail/smtp/$host)
+        smtp-port=$(/machine/mail/smtp/$port)
+        smtp-ssl=$(/machine/mail/smtp/$ssl)
+        credentials-id=$(/machine/mail/user/$id)
+        credentials-password=$(/machine/mail/user/$pwd)
+
+        from-address="api-health@google.com"
+        from-name="Log robot for `$(/$name)` on [$(/$environment-name)] @ `$(~App.HOST)`"//notice the use of App-dynamic variable $(~App.HOST)
+        to-address="api-health@yourorg.com, someoneelse@yourorg.com"
+
+        subject="Problem log `$(/$name)` on [$(/$environment-name)] @ `$(~App.HOST)`"
+        body=$"
+Environment: $(/$environment-name)
+Host: $(~App.HOST)
+App.id: $(/$id)
+App.name: $(/$name)
+App.descr: $(/$description)
+App.instance: $(~App.INSTANCE)
+App.start: $(~App.STARTTIME)
+-------------------------------------
+
+"
+
+      }//smtp
+    }//batcher
+
+    //mix-in app-specific logs, start order from 1000
+    //we process app-specific logs in a separate
+    //_include{ file=".cfg/$(/$id)/app-log.laconf"}
+
+
+    sink
+    {
+      order=10000
+      name="fail-inner"
+      only-failures=true//do not route any normal logging here, only other log failures get written here
+      type="CSVFileSink"
+      path=$(/paths/$log)
+      file-name="{0:yyyyMMdd}-$(/$name)-$($name).csv.log" //e.g.: 20210307-app1-fail-inner.csv.log
+    }
+  }//async-graph
+  /* ====================================================================================================== */
+
+  // this sync is a catch-all error in any other sink above
   sink
   {
     order=10000
@@ -49,5 +145,4 @@
     path=$(/paths/$log)
     file-name="{0:yyyyMMdd}-$(/$name)-$($name).csv.log" //e.g.: 20210307-app1-fail.csv.log
   }
-
 }

@@ -41,4 +41,7 @@ event-timer
     file-system { root-path=$(/paths/$log) }
   }
 
+  //mix-in app-specific timer events
+  //_include{ file=".cfg/$(/$id)/app-timer-events.laconf"}
+
 }
