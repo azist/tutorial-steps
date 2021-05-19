@@ -1,4 +1,4 @@
-# Azos Framework - a Steb by Step Tutorial
+# Azos Framework - a Step by Step Tutorial
 
 A Step-By-Step Guide to using Azos Framework
 
