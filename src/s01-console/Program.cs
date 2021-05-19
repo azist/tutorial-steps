@@ -21,6 +21,9 @@ namespace s01_console
     {
       try
       {
+        //This entry point is .Net Core specific
+        new Azos.Platform.Abstraction.NetCore.NetCore20Runtime();
+
         //Allocate app chassis, passing command arguments
         //app configuration will be read by the chassis from the config file co-located
         //with the entry-point executable.

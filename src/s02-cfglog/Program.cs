@@ -21,6 +21,9 @@ namespace s02_cfglog
     {
       try
       {
+        //This entry point is .Net Core specific
+        new Azos.Platform.Abstraction.NetCore.NetCore20Runtime();
+
         //Allocate app chassis, the chassis has a default logger
         //The aopp.Log gets built from `/log` config section automatically
         using (var app = new AzosApplication(args))

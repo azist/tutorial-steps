@@ -1,37 +1,29 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
-    <RootNamespace>s02_cfglog</RootNamespace>
-    <ServerGarbageCollection>true</ServerGarbageCollection>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>../../out/Debug/</OutputPath>
+    <DocumentationFile>../../out/Debug/Tutorial.xml</DocumentationFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <OutputPath>../../out/Release/</OutputPath>
+    <DocumentationFile>../../out/Release/Tutorial.xml</DocumentationFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../Tutorial/Tutorial.csproj" />
+    <PackageReference Include="Azos" Version="$(AzosVersion)" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="s02-cfglog-files.laconf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="s02-cfglog.laconf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="s02-cfglog.laconf">
+    <None Update="cfg/**/*.laconf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
 </Project>
-

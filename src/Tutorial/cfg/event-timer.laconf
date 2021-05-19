@@ -1,0 +1,44 @@
+﻿//declares events that periodically run
+event-timer
+{
+  event
+  {
+    name="Clean-Old-Log-Files"
+    type="Azos.IO.FileSystem.DeleteFilesJob, Azos"
+    interval="02:30:18" //every 2 and a half hours, run this job
+
+    recurse=false//remain in one directory
+    delete-empty-dirs=false//keep directories
+    name-include-pattern="*.log"//all log files
+
+    last-modify-ago-hrs=120 //something that was written into over 120 hrs ago
+    log-stats=true//emit instrumentation/log entry
+
+    //declare file system mount
+    //you can mount any supported file system, e.g. Amazon S3, Google Drive etc.
+    //if you do not specify the `type` attribute, then the system defaults to "LocalFileSystem"
+    //"LocalFileSystem" is based on "System.IO.FileStream" (uses OS APIs on local machine)
+    file-system
+    {
+      //type="Azos.IO.FileSystem.GoogleDrive, Azos.Google"
+      root-path=$(/paths/$log) //where log files are
+    }
+  }
+
+  event
+  {
+    name="Clean-Old-Log-Archive-Files"
+    type="Azos.IO.FileSystem.DeleteFilesJob, Azos"
+    interval="12:00:00" //every 12 hours
+
+    recurse=false
+    delete-empty-dirs=false
+    name-include-pattern="*.larx"//all log archive files
+
+    last-modify-ago-hrs=744 //31 days
+    log-stats=true
+
+    file-system { root-path=$(/paths/$log) }
+  }
+
+}
