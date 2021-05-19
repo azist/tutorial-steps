@@ -61,6 +61,13 @@ we want to add other log sinks to get messages writen into a file, get detaile e
 We are going to create a few alternate config files which would allow us to use different log graph
 whithout changing anything in the application code.
 
+To run an application with a different config file:
+```
+./out/Debug/$ dotnet s02-cfglog.dll -config s02-cflog-files.laconf
+```
+
+This would use a different named file for app config. 
+
 
 
 
