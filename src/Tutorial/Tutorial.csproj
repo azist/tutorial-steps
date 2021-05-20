@@ -26,4 +26,10 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="machine.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

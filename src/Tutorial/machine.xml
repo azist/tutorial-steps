@@ -1,0 +1,94 @@
+﻿<!--
+  Machine configuration file externalizes variables to be set by elevate(deploy) process (e.g. Octopus, Azure DevOps etc..).
+
+  This file is in XML format as it may need to be parsed by publish tool (e.g. Appveyor, Octopus, Jenkins etc..)
+
+  There may be more than one file with the same name sitting in the same directory, the difference is in the suffix which
+  represents deployemnt target. Each application configuration mixes-in the appropriate machine file, named with the suffix
+  at the end where the suffix is taken from  environment variable `AZ_MACHINE_CONFIG_SUFFIX` set on the target host.
+
+  For example:
+
+    [app-]machine.local.xml     -  file filled with actual values used for local development
+
+    [app-]machine.dev.xml       -  file used in DEV, dev sometimes needs similar values as local
+                                   (e.g. when DevOps elevate process is being developed and not yet available)
+
+    [app-]machine.devops.xml    -  file used by elevate system (e.g. Octopus or Jenkins) during publishing into an environment,
+                                   this file would contain variables which the system can set
+
+
+  The build pipeline sets the variables in the relevant file (e.g. *.octopus.xml) to values matching target environment (e.g. DEV/UAT/PROD).
+  This way the software is built and deployed uniformly to all environments
+-->
+<machine
+  environment-name="dev"
+  home-path="$(~AZ_TEST_ROOT)"
+  log-level-comp="Debug"
+  log-level-data="None">
+
+  <web errors-local-only="" log-errors-local-only="">
+    <listen name="main">http://+:$(/$http-listen-port)</listen>
+  </web>
+
+
+  <security>
+    <cryptography>
+      <!--
+        You can generate keys by using 'phash' utility
+          $ cd out/Debug/azos/run-core    # go to azos tooling directory (relative to project root)
+          $ dotnet phash.dll -?           # get help/manual
+          $ dotnet phash.dll -k 512 -ne   # generate 512 bit key, do not get extra entropy from operator
+          $ dotnet phash.dll -k 256       # generate 256 bit key, get extra entropy from operator
+
+        WARNING:
+          Never use hard-coded crypto values in non-local/dev environment files.
+          Store secrets in your deploy store (e.g. Octopus variables) and use var interpolation during
+          environment deploy
+       -->
+      <aes1>
+        <hmac512-0>base64:Wj-57q4gob9eDhSR8wi9AGsLyEoI_8d9B9gGZnqOb6wo-Efz0P_jjL9gfVZGrOyKtjZocz07hzOnthMSaSba5Q</hmac512-0>
+        <hmac512-1>base64:7JjEGVmobBWuOmbPM02iTlQubI_jFx6iBh-165AYW5L-FR0dJf_7pREnIsux8DJOlsqJ5EFw14IlXZXLpx7Gfg</hmac512-1>
+        <aes256-0>base64:zFdVSrHzy8xQvWIT39xH-OgSsZ4uIz2cPQ7sO4d6Xeo</aes256-0>
+        <aes256-1>base64:uP-ymZuNaYvo6YTsi3XV32K_PA0pgtjpc3vsWbnHP6Y</aes256-1>
+        <aes256-2>base64:b-8kmq7UwApkg5Hya5mhidN6dDGCOiSjgM325JkFdGY</aes256-2>
+      </aes1>
+      <jwt1>
+        <hmac512>base64:Q90VgcBobBA5UXjUe-x2AB349qzabIQHT0D9vEl5egHynoFlNmDTnC4N4VmtiuTuO0kfs73RDxaCJyKPbo6-pQ</hmac512>
+      </jwt1>
+      <idpmsg>
+        <hmac512-0>base64:TCh_K6Ih8DSCQjDiour9Kw46vUCNsRDhX8WlmrKIYvhAazp3H5s_CP4c_cYVtfPNp6hYSBG3xny3fDMOdMwozQ</hmac512-0>
+        <aes256-0>base64:X-it7L9oTB-P2snTm5lyCL4UBttEt4hd0sfuJuPSgdE</aes256-0>
+        <aes256-1>base64:_XoYyy0ZrPuQ0HERlafMrbk1-8xC8UFVkfpHvDWDY-8</aes256-1>
+      </idpmsg>
+    </cryptography>
+  </security>
+
+  <services>
+    <!-- Global Distributed ID authorities -->
+    <gdida auth-scheme="Bearer" auth-value="garbage_bearer_token">
+      <shard-0-first>http://serverClosest:9000/es</shard-0-first>
+      <shard-0-second>http://serverNextClosest:9000/es</shard-0-second>
+    </gdida>
+
+    <!-- API Authentication IDP/OAuth -->
+    <minidp auth-scheme="Bearer" auth-value="garbage_bearer_token">
+      <shard-0-first>http://serverClosest:9000/minidp</shard-0-first>
+      <shard-0-second>http://serverNextClosest:9000/minidp</shard-0-second>
+    </minidp>
+
+    <!-- APM Chronicles (log/telemetry) -->
+    <chronicle auth-scheme="Bearer" auth-value="garbage_bearer_token">
+      <shard-0-first>http://serverClosest:9010/chronicle</shard-0-first>
+      <shard-0-second>http://serverNextClosest:9010/chronicle</shard-0-second>
+    </chronicle>
+  </services>
+
+  <connect-strings>
+    <context1 schema-name="dbo">
+      <primary>connect_string</primary>
+      <secondary>connect_string</secondary>
+    </context1>
+  </connect-strings>
+
+</machine>

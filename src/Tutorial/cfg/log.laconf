@@ -24,7 +24,7 @@
     order=10
     name="gen"//generic
     description="Catch-all CSV text file sink easy to view"
-    type="SCVFileSink"
+    type="CSVFileSink"
     path=$(/paths/$log)
     file-name="{0:yyyyMMdd}-$(/$name)-$($name).csv.log" //e.g.: 20210307-app1-gen.csv.log
     levels="Debug-TraceZ | Info-" //all message levels except for "Instrumentation" which we don't want in this sink
@@ -38,7 +38,7 @@
     order=11
     name="vegetarian"//as an example we are going to write messages which pass filter
     description="Only messages which satisfy filter"
-    type="SCVFileSink"
+    type="CSVFileSink"
     path=$(/paths/$log)
     file-name="{0:yyyyMMdd}-$(/$name)-$($name).csv.log"
     generate-failover-msg=true
@@ -73,7 +73,7 @@
   {
     order=30
     name="async-graph"
-    type="LoagDaemonSink" //this sink establishes its own async graph which is isolated from the parent
+    type="LogDaemonSink" //this sink establishes its own async graph which is isolated from the parent
     reliable=false//do not block on shutdown until queue is flushed
     levels="Debug-TraceZ | Info-"//all except Instrumentation
     default-failover="fail-inner"
@@ -88,6 +88,7 @@
       max-text-length=128000//no more than 128Kbytes in total size
       min-level=Warning//Warning or worse
 
+/* //Example of SMTP logger
       sink
       {
         name="smtp"
@@ -116,6 +117,7 @@ App.start: $(~App.STARTTIME)
 "
 
       }//smtp
+*/
     }//batcher
 
     //mix-in app-specific logs, start order from 1000

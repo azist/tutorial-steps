@@ -9,14 +9,15 @@ app
   process-includes="_include"
 
 
-  //The machine config file is taken by default from `xyz-machine.{AZ_DEV_CONFIG_SUFFIX}.xml` unless
+  //The machine config file is taken by default from `xyz-machine.{AZ_MACHINE_CONFIG_SUFFIX}.xml` unless
   //an override is set for integration testing. The syntax below is based on config nav coalescing:
   //the system tries to read from left to right tripping on a first value which exists
-  az-dev-config-suffix=$(~AZ_DEV_CONFIG_SUFFIX)
+  machine-config-suffix=$(~AZ_MACHINE_CONFIG_SUFFIX)
   _include
   {
     name=machine //the referenced file as `machine` section instead of this `_include` section here
-    file="./machine$(/$az-dev-config-suffix-override;/$az-dev-config-suffix).xml"
+    //file="./machine$(/$machine-config-suffix-override;/$machine-config-suffix;/$machine-config-suffix-default).xml"
+    file="./machine$(/$machine-config-suffix-override;/$machine-config-suffix).xml"
   }
 
   //in server applications we want to use invariant culture across all code
