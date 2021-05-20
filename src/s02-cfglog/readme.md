@@ -57,16 +57,19 @@ cross-server aggregation of log data.
  
 ## Log Configuration
 In the first section above we just created a simple logger which writes into console, however
-we want to add other log sinks to get messages writen into a file, get detaile exception dumps etc.
+we want to add other log sinks to get messages written into a file, get detailed exception dumps etc.
 We are going to create a few alternate config files which would allow us to use different log graph
-whithout changing anything in the application code.
+without changing anything in the application code.
 
 To run an application with a different config file:
 ```
-./out/Debug/$ dotnet s02-cfglog.dll -config s02-cflog-files.laconf
+./out/Debug/$ dotnet s02-cfglog.dll -config s02-cfglog-files.laconf
 ```
 
-This would use a different named file for app config. 
+This would use a different named file for app config: 
+ [Another Config file `s02-cfglog-files.laconf`](s02-cfglog-files.laconf).
+
+Start at the root application tree and carefully examine the `_include` sections with explanations.
 
 
 
