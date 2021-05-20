@@ -13,7 +13,7 @@ When you run the application:
 ./out/Debug/$ dotnet s02-cfglog.dll
 ```
 
-We are running the app with its [Default Config file](s02-cflog.laconf) which specifies a console log 
+We are running the app with its [Default Config file](s02-cfglog.laconf) which specifies a console log 
 sink, so all log messages will be shown in the console.
 
 The following output is produced:
