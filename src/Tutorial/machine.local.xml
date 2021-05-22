@@ -79,8 +79,8 @@
 
     <!-- APM Chronicles (log/telemetry) -->
     <chronicle auth-scheme="Bearer" auth-value="garbage_bearer_token">
-      <shard-0-first>http://serverClosest:9010/chronicle</shard-0-first>
-      <shard-0-second>http://serverNextClosest:9010/chronicle</shard-0-second>
+      <shard-0-first>http://serverClosest:9010/chronicle</shard-0-first>  <!-- no trailing slash -->
+      <shard-0-second>http://serverNextClosest:9010/chronicle</shard-0-second>  <!-- no trailing slash -->
     </chronicle>
   </services>
 

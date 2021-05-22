@@ -1,0 +1,60 @@
+﻿modules
+{
+  // Chronicle client is needed to enable logger sink connection to APM Chronicle server
+  // the client sends data into Chronicle server
+  module
+  {
+    name="chronicle.client"
+    type="Azos.Sky.Chronicle.ChronicleWebClientLogic, Azos.Sky"
+    log-level=$(/machine/$log-level-comp)
+
+    log-service-address="chronicle"
+    instrumentation-service-address=$($log-service-address)
+
+    service
+    {
+      default-network="internoc"
+      default-binding="http"
+      default-timeout="3790"
+
+      auth-scheme=$(/machine/services/chronicle/$auth-scheme)
+      auth-header=$(/machine/services/chronicle/$auth-value)
+
+      endpoint //Primary
+      {
+        network=$(../$default-network)
+        binding=$(../$default-binding)
+        //timeout-ms=4000 //// will use default
+        remote-address=$(../../$log-service-address)
+        contract="ILogChronicle"
+        shard=0 //BALANCER: Shard 0
+        shard-order=0 // Primary Server
+
+        enable-distributed-call-flow=true //teleport call flow information across process boundaries
+        uri="$(/machine/services/chronicle/shard-0-first)/log/" // physical service endpoint address
+
+        accept-json=true
+        auth-scheme=$(../$auth-scheme)
+        auth-header=$(../$auth-header)
+      }
+
+      endpoint //Secondary - a backup for primary
+      {
+        network=$(../$default-network)
+        binding=$(../$default-binding)
+        //timeout-ms=4000 //// will use default
+        remote-address=$(../../$log-service-address)
+        contract="ILogChronicle"
+        shard=0 //BALANCER: Shard 0
+        shard-order=1 // SECONDARY Server
+
+        enable-distributed-call-flow=true
+        uri="$(/machine/services/chronicle/shard-0-second)/log/"
+
+        accept-json=true
+        auth-scheme=$(../$auth-scheme)
+        auth-header=$(../$auth-header)
+      }
+    }//service
+  }
+}

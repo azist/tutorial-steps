@@ -66,11 +66,15 @@ To run an application with a different config file:
 ./out/Debug/$ dotnet s02-cfglog.dll -config s02-cfglog-files.laconf
 ```
 
-This would use a different named file for app config: 
+This would use a different named file for app config, see this file for details: 
  [Another Config file `s02-cfglog-files.laconf`](s02-cfglog-files.laconf).
+
 
 Start at the root application tree and carefully examine the `_include` sections with explanations.
 
+> The log files would appear under `./out/{Debug|Release}/logs/{appname}/*.log` if you do not set
+> global environment variable `AZ_TEST_ROOT`. If the var is set then the log path would be rooted
+> at that location. The system will create `logs...` directory automatically
 
 
 

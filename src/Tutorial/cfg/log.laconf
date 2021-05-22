@@ -120,9 +120,20 @@ App.start: $(~App.STARTTIME)
 */
     }//batcher
 
-    //mix-in app-specific logs, start order from 1000
-    //we process app-specific logs in a separate
+    ////mix-in app-specific logs, start order from 1000
+    ////notice that the sink is mixed-in under async sub-graph not to affect the main logging queue
+    ////we declare app-specific logs in a separate file
     //_include{ file=".cfg/$(/$id)/app-log.laconf"}
+
+    ////sends messages into distributed cloud log server: chronicle
+    ////notice that the sink is mixed-in under async sub-graph not to affect the main logging queue
+    //sink
+    //{
+    //  order=9990
+    //  name="chronicle"
+    //  type="Azos.Sky.Log.ChronicleSink, Azos.Sky"
+    //  generate-failover-msg=true
+    //}
 
 
     sink
