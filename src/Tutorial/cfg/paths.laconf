@@ -10,13 +10,17 @@
 //
 paths
 {
+  home-path-default="./"
+
   //take root home path from machine-dependent config
-  home=$(/machine/$home-path)
+  //notice coalescing syntax from left to right the paths delimited by ';' get evaluated
+  //until such node is found AND its value is not blank ('#' instructs to check node value as well)
+  home=$(#/machine/$home-path;$home-path-default)
 
   //we will dump all local logs under "logs" subdirectory
   log-dir=logs
 
   //Concatenate as path:  home + logs + {app.name}
-  //the '@' means "as path" to avoid unneeded slashes, e.g. "a/"+"/b" = "a/b"
+  //the '@' means "as path" to avoid unneeded slashes, e.g. "a/"+"/b" = "a/b" when '@' is used
   log=$($home)$(@$log-dir)$(@/$name) // e.g. c:\apps\logs\s02-cfglog
 }

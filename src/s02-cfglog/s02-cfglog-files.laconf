@@ -13,11 +13,11 @@ app
   //an override is set for integration testing. The syntax below is based on config nav coalescing:
   //the system tries to read from left to right tripping on a first value which exists
   machine-config-suffix=$(~AZ_MACHINE_CONFIG_SUFFIX)
+  machine-config-suffix-default=.local
   _include
   {
     name=machine //the referenced file as `machine` section instead of this `_include` section here
-    //file="./machine$(/$machine-config-suffix-override;/$machine-config-suffix;/$machine-config-suffix-default).xml"
-    file="./machine$(/$machine-config-suffix-override;/$machine-config-suffix).xml"
+    file="./machine$(#/$machine-config-suffix-override;#/$machine-config-suffix;#/$machine-config-suffix-default).xml"
   }
 
   //in server applications we want to use invariant culture across all code

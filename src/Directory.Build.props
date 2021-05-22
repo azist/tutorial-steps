@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Version>0.0.1</Version>
 
-    <AzosVersion>1.11.0</AzosVersion>
+    <AzosVersion>1.19.5</AzosVersion>
 
     <!-- To copy referenced Azos packages into /out -->
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
