@@ -1,0 +1,80 @@
+﻿/*
+  Declares cryptographic algorithms, keys etc.
+  Many components rely on cryptographic services and reference the algorithms declared here using their names.
+
+  Examples:
+  (a) application operation log archive may contain sensitive data and archive log sink can be set to
+      use `encryption-schema` which is a reference to an algorithm instances (algorithm type and its keys) declared here.
+  (b) STS/Token authority uses crypto algorithms to work with JWT, OAuth, Bearer and various other token types
+  (c) An IDP provider uses internal algorithm to validate identity tokens and ACLs
+*/
+cryptography
+{
+  /*
+    Internal IDP traffic is protected using this algorithm so even if the internal services are not provided via TLS/Https
+    the traffic still can not be understood by 3rd parties.
+    Example:
+      3rd parties (e.g. admin consultants) might get temporary access to you NOC network and capture some internal traffic.
+      They will not be able to eavesdrop on IDP messages without these keys. The keys are securely deployed per
+      environment (e.g. dev/uat/prod)
+  */
+  algorithm
+  {
+    name="internal.idpmsg"
+    audience=Internal // (Public | Internal) - this algorithm is only used inside of system perimeter
+    type="Azos.Security.HMACAESCryptoMessageAlgorithm, Azos"
+    hmac{ key=$(/machine/security/cryptography/idpmsg/hmac512-0) }
+    aes{ key=$(/machine/security/cryptography/idpmsg/aes256-0) }
+    aes{ key=$(/machine/security/cryptography/idpmsg/aes256-1) }
+  }
+
+
+  /*
+    Public AES256-based symmetrical message protection algorithm with integrity check.
+    The algorithm uses AES256 for encryption and HMAC512 integrity check.
+    For additional protection, the implementation performs key rotation based on IV (random for every message).
+    You can configure any number of additional `aes` encryption keys and any number of additional `hmac` integrity
+    keys making cracking virtually impossible - the attacker does not possess knowledge about key rotation and
+    number of keys AND number of key COMBINATIONS.
+
+    Note:
+     changing keys, adding/removing keys, or changing key order in the algorithm keyset would invalidate all
+     messages (e.g. OAuth tokens, Bearer tokens etc) protected with the previous setting
+  */
+  algorithm
+  {
+    name="aes1"
+    default=true
+    audience=Public // (Public | Internal) - this is a public algorithm for generating tokens like Bearer OAuth etc..
+    type="Azos.Security.HMACAESCryptoMessageAlgorithm, Azos"
+
+    hmac{ key=$(/machine/security/cryptography/aes1/hmac512-0) }
+    hmac{ key=$(/machine/security/cryptography/aes1/hmac512-1) }
+
+    aes{ key=$(/machine/security/cryptography/aes1/aes256-0) }
+    aes{ key=$(/machine/security/cryptography/aes1/aes256-1) }
+    aes{ key=$(/machine/security/cryptography/aes1/aes256-2) }
+  }
+
+  /*
+    The JWT support is mostly needed for OpenIdConnect standard compliance.
+
+    This [J]ason [W]eb [T]oken algorithm uses HMACSHA256 protection of UTF8-Encoded JWT claims.
+    In the context of this system the JWT envelopes the token protected by `aes1` (see above)
+    which provides very strong security of its own.
+    In this setting we do not store any sensitive data in JWT, instead we store crypto-protected access token
+    enveloped in JWT, hence there is no practical need to support complex JWT encryption schemes as JWT is used only
+    as a PASS-THROUGH mechanism, not an authentication mechanism.
+
+    We can also provided stricter security with server-side token ring in which case even an inner message which JWT message
+    envelopes contains no meaningful data in principle.
+  */
+  algorithm
+  {
+    name="jwt1"
+    default=true
+    type="Azos.Security.JWTHS256CryptoMessageAlgorithm, Azos"
+    hmac{ key=$(/machine/security/cryptography/jwt1/hmac512) }
+  }
+
+}

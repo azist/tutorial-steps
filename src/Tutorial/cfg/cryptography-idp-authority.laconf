@@ -1,0 +1,50 @@
+﻿/*
+  Declares cryptographic algorithms and keys for use by IDP authority -
+  these are the private keys which only get deployed on the IDP origin servers.
+  This file gets mixed-into sec config by IDP serve processes.
+  Note:
+   the fact of configuration snippet inclusion does not mean that the keys are deployed everywhere,
+   as the keys reside per-machine/environment and this file just provides algorithm declaration along with variable redirection
+*/
+cryptography-idp-authority
+{
+  /*
+    Summary:
+      In addition to using industry-standard JWT/OAuth et.al,  the IDP system uses internal-only tokens for identity federation
+    within the cluster. These internal tokens `SysAuthToken` are never given out to public clients.  The system protects these
+    tokens as strongly as it does protect the public ones, however the segregation of security channels for pub/internal tokens
+    provides much more secure and simpler solution (e.g. all principal accounts are uniformly identified internally).
+
+    IDP Authority (Identity Provider Server) issues `SysAuthToken` instances on successful principal authentication.
+    The `SysAuthTokens` are used for delegation/impersonation and authentication uniformity and general identity federation capabilities.
+    The `SysAuthToken` is purely an internal system "reference to identity record" within the system.
+    It is BY DESIGN NEVER EVER GIVEN-OUT to any public callers (e.g. APIs clients, interactive sessions).
+
+    The callers/clients of the IDP are not only the external users whose identities are federated/mapped via
+    business applications but also various system principals, such as machine/service accounts.
+    For example, a Facebook account for `User123` is INTERNALLY mapped to `SysAuthToken('s7sdfhuf9sy8fyhqhfhf')`.
+    The same user can additionally authenticate via AD, email/password pair, telephone number, biometrics etc. having
+    all of these methods point to the SAME PRINCIPLE record represented by `SysAuthToken` encrypted instance.
+
+    The IDP authority DEFENSIVELY PROTECTS all `SysAuthToken` instances which it produces, so no other caller, EVEN WITHIN
+    THE INTERNAL NOC/zone/cluster perimeter may forge such a token. No rogue process may try to manufacture such token
+    as they are protected with the keys ONLY available to IDP authority and no other system node - this establishes
+    AN ADDITION SECURITY BARRIER ZONE within your internal NOC network/partition.
+
+    The algorithm declared herein protects the token in two ways:
+     (a) Token is encrypted and unreadable
+     (b) Token is checked against forgery/tampering using HMACSHA private key
+
+    Internally, token typically contains "exp" field with pre-set end of life point so even the valid tokens can not be re-played
+    indefinitely. Depending on a concrete IDP implementation, the authority may also include NONCE marker to ensure one-time use
+  */
+  algorithm
+  {
+    name="internal.systoken"
+    audience=Internal // !!!! INTERNAL ONLY !!!!
+    type="Azos.Security.HMACAESCryptoMessageAlgorithm, Azos"
+    hmac{ key=$(/machine/security/cryptography/idpsystoken/hmac512-0) }
+    aes{ key=$(/machine/security/cryptography/idpsystoken/aes256-0) }
+    aes{ key=$(/machine/security/cryptography/idpsystoken/aes256-1) }
+  }
+}
