@@ -1,0 +1,13 @@
+﻿modules
+{
+  //Responsible for generating Global Distributed Id (GDID)
+  //The `uat` environment uses true Gdid authority service
+  module
+  {
+    name="gdidprovider"
+    type="Azos.Sky.Identification.GdidProviderModule, Azos.Sky"
+    log-level=$(/machine/$log-level-comp)
+
+    _include{ file="./cfg/mode/gdid-client-common-accessor.laconf"}
+  }
+}

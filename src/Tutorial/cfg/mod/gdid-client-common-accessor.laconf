@@ -1,0 +1,56 @@
+﻿accessor
+{
+  use-local-authority=false
+  accessor
+  {
+    type="Azos.Sky.Identification.GdidAuthorityWebAccessor, Azos.Sky"
+
+    authority-address="gdida"
+
+    service
+    {
+      default-network="internoc"
+      default-binding="http"
+      default-timeout="3790"
+
+      auth-scheme=$(/machine/services/gdida/$auth-scheme)
+      auth-header=$(/machine/services/gdida/$auth-value)
+
+      endpoint //Primary
+      {
+        network=$(../$default-network)
+        binding=$(../$default-binding)
+        //timeout-ms=4000 //// will use default
+        remote-address=$(../../$authority-address)
+        contract="*"
+        shard=0 //BALANCER: Shard 0
+        shard-order=0 // Primary Server
+
+        enable-distributed-call-flow=true //teleport call flow information across process boundaries
+        uri="$(/machine/services/gdida/shard-0-first)/gdidauthority/" // physical service endpoint address
+
+        accept-json=true
+        auth-scheme=$(../$auth-scheme)
+        auth-header=$(../$auth-header)
+      }
+
+      endpoint //Secondary - a backup for primary
+      {
+        network=$(../$default-network)
+        binding=$(../$default-binding)
+        //timeout-ms=4000 //// will use default
+        remote-address=$(../../$authority-address)
+        contract="*"
+        shard=0 //BALANCER: Shard 0
+        shard-order=1 // SECONDARY Server
+
+        enable-distributed-call-flow=true
+        uri="$(/machine/services/gdida/shard-0-second)/gdidauthority/"
+
+        accept-json=true
+        auth-scheme=$(../$auth-scheme)
+        auth-header=$(../$auth-header)
+      }
+    }//service
+  }
+}
