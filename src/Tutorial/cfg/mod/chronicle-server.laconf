@@ -44,15 +44,26 @@
         archive-version-major=1
         archive-version-minor=0
         archive-description="My application log chronicle archive"
-        archive-page-size=200704
+        archive-page-size=180000 //roughly 180Kb, pages get aligned on a 16byte-boundary anyway
         archive-channel=oplog
 
-        //optional, turn-on compression
+        //Optional: turn-on compression such as built-in `gzip` or `gzip-max`
+        //Compression is performed page-by-page as archive gets written.
+        //`gzip-max` is slower an yields 5-10% better compression
         archive-compression-scheme=gzip
 
-        //optional, uncomment the encryption if you have sensitive data
-        //the algorithm/keyset must be registered in you container security manager/cryptography section
+        //Optional: uncomment the encryption if you have sensitive archived data
+        //The encryption scheme setting is the name of  algorithm+keyset which must be
+        //registered in app chassis security manager/cryptography section, thus
+        //you can use any cryptographic algorithm.
+        //Encryption is performed page-by-page as archive gets written.
         //archive-encryption-scheme="internal.oplog.beta"
+
+        ////You could mount a file system and direct the log output into it (e.g. Amazon S3)
+        //file-system
+        //{
+        //  connect-params{ }
+        //}
       }
 
     }//log-archive

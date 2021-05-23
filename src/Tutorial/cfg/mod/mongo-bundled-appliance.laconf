@@ -1,0 +1,28 @@
+﻿modules
+{
+  //Installs Mongo Database Appliance module
+  //which allows for containerized database deployment.
+  module
+  {
+    name="mongo.appliance"
+    type="Azos.Data.Access.MongoDb.MongoDbAppliance, Azos.MongoDb"
+    log-level=$(/machine/$log-level-comp)
+
+    //This configuration bootstraps (runs/stops) Mongo Database Engine from
+    //an executable file `mongod` bundled with your application in "appliance mode".
+    bundled-mongo
+    {
+      mongo-data-dir="mongo"
+
+      type="Azos.Data.Access.MongoDb.BundledMongoDb, Azos.MongoDb"
+      mongo-bin=$(/paths/$data)
+      mongo-db-path=$(/paths/$data-app)$(@$mongo-dir)
+
+      //the `services` section is declared in root app config as
+      //it defines what services are rendered by THAT application
+      //you may host multiple mongo instances on different ports on the same machine
+      //notice `!` which requires the setting (if not set, app boot will fail)
+      mongo-port=$(!/services/$mongo-appliance-port)
+    }
+  }
+}
