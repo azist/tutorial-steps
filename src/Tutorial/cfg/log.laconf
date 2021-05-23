@@ -130,7 +130,7 @@ App.start: $(~App.STARTTIME)
     //sink
     //{
     //  order=9990
-    //  name="chronicle"
+    //  name="chronicle.uplink"
     //  type="Azos.Sky.Log.ChronicleSink, Azos.Sky"
     //  generate-failover-msg=true
     //}

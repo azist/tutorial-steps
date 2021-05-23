@@ -1,0 +1,66 @@
+﻿modules
+{
+  //Declares a module which hosts dedicated log graph for application operation logging
+  //such as business transaction logging
+  module
+  {
+    name="oplog"
+    type="Azos.Log.LogModule, Azos"
+    log-level=$(/machine/$log-level-comp)
+
+    default-channel=oplog
+
+    log
+    {
+      name="oplog.log"
+      type-path="Azlos.Log.Sinks, Azos"
+      dfault-failover="fail.oplog"
+      reliable=false //do not block on shutdown
+
+      sink
+      {
+        order=0
+        name="fail.oplog"
+        type="CSVFileSink"
+        only-failures=true
+        path=$(/paths/$log)
+        file-name="{0:yyyyMMdd}-$(/$name)-$($name).csv.log"
+      }
+
+      sink //Write into local archive on this node
+      {
+        order=100
+        name="arch.oplog"
+        type="ArchiveSink"
+        generate-failover-msg=true
+        path=$(/paths/$log)
+        file-name="{0:yyyyMMdd}-$(/$name)-$($name).larx"
+
+        archive-version-major=1
+        archive-version-minor=0
+        archive-description="My application log chronicle archive"
+        archive-page-size=180000 //roughly 180Kb, pages get aligned on a 16byte-boundary anyway
+        archive-channel=oplog
+
+        //Optional: turn-on compression such as built-in `gzip` or `gzip-max`
+        //Compression is performed page-by-page as archive gets written.
+        //`gzip-max` is slower an yields 5-10% better compression
+        archive-compression-scheme=gzip
+
+        //archive-encryption-scheme="internal.oplog.beta"
+
+        ////You could mount a file system and direct the log output into it (e.g. Amazon S3)
+        //file-system{  connect-params{ }  }
+      }
+
+      sink//Sends oplog stream to chronicle
+      {
+        order=200
+        name="chronicle.uplink.oplog"
+        type="Azos.Sky.Log.ChronicleSink, Azos.Sky"
+        generate-failover-msg=true
+      }
+
+    }//log
+  }//module
+}

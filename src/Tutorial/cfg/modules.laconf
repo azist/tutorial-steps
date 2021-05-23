@@ -1,0 +1,12 @@
+﻿//Installs typical application modules
+modules
+{
+  _include{file="./cfg/mod/gdid-client-$(/$environment-name).laconf"}
+  _include{file="./cfg/mod/oplog.laconf"}
+
+  //Application-specific log
+  _include{file="./cfg/$(/$id)/app-logic.laconf"}
+
+  //Open Auth
+  //_include{file="./cfg/mod/oauth.laconf"}
+}

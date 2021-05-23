@@ -36,7 +36,7 @@
       sink
       {
         order=100
-        name="arch.chronicle"
+        name="archive.chronicle"
         type="ArchiveSink"
         path=$(/paths/$log)
         filename="{0:yyyyMMdd}-$(/$name)-$($name).larx"
