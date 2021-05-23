@@ -1,0 +1,48 @@
+﻿modules
+{
+  //Provides services for OAuth 2.0 standard, including OIDConnect
+  module
+  {
+    name="oauth"
+    type="Azos.Security.Services.OAuthModule, Azos"
+
+    supported-scopes="openid connect"
+    access-token-lifespan-sec=1209600 //14 days
+    refresh-token-lifespan-sec=2592000 // 30 days,  0 = disabled
+
+    //The following gate-* variables drive network gate traffic flow state.
+    //Network gate is a stateful application-mode firewall/throttle built into the system.
+    //It is used to protect the system from DOS and other break-in attacks threats.
+    //You can activate Gate protection policy to react to the following variables
+    gate-var-errors="oauth_Errors"  //oauth protocol errors - may indicate DDOS or general break-in attempts
+    gate-var-invalid-user="oauth_InvalidUser" //bad user - may indicate token forgery attempt
+
+    //Token ring (a-la "Key ring") is a component which maintains tokens.
+    //Most systems use client-side tokens having subject identity AND certain claims
+    //encoded right into the token body. The token then gets protected with crypto-safe APIs
+    //to ensure integrity.
+    //You can also use server-side token ring which generate token bodies which only have a unique
+    //token ID which is disclosed to the client. When client sends this token, the server token ring
+    //always checks the actual data on THE SERVER every time when the token is validated.
+    //Server token rings are much more secure as they virtually could not be compromised, however they are harder
+    //to implement and less scalable as they depend on global token authority validation on every call
+    token-ring
+    {
+      //Stores tokens on a client-side using message crypto-protection APIs
+      type="Azos.Security.Tokens.ClientTokenRing, Azos"
+      issuer-name="My Company Authority"//e.g. this is used as "iss" JWT field
+    }
+
+    //Optionally, you can configure a different securiry manager used for
+    //authentication/authorization of the relying parties. This is needed
+    //in large systems where app users and users representing 3rd party OAuth apps
+    //are maintained in different IDP solutions.
+    //If this is not configured, then the system delegates relying party authentication/authorization
+    //to the app chassis security manager
+    //client-security
+    //{
+    //  //your secman declaration
+    //}
+
+  }
+}
