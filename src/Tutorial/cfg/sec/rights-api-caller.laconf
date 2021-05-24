@@ -1,0 +1,73 @@
+﻿/*
+  AUTHORIZATION:
+  Example base rights assignment file
+  contains configuration vector for permissions - defining what permissions are granted/denied
+  along with whatever flags these permissions may need
+
+  Files like this are kept in IDP/ACL/Rights records and assigned to principals
+  either directly or via roles/groups etc..
+*/
+rights
+{
+  Azos //System framework rights
+  {
+    Security
+    {
+      //Enable identity provider
+      Idp{ level=1000 }
+    }
+
+    Sky
+    {
+      Security
+      {
+        Permissions
+        {
+          Chronicle
+          {
+            //Enable chronicle uplink
+            Chronicle{ level=1000 }
+          }
+        }
+      }
+    }
+  }//Azos
+
+
+  YourCompany{ Security{ Permissions{
+
+    //Generic api caller grant- protect you base controllers with this permission
+    ApiCaller{ level=1000 }
+
+    As // Application system
+    {
+      app1
+      {
+        Functionality1 {level=1000  data::*{level=$(../$level)}}
+        Functionality2
+        {
+          level=1000
+          data::*{level=0} //deny *
+          data::ctx1{level=2} //ctx1=2 aka "View/Change"
+          data::ctx123{level=1}//ctx2=1 aka ViewOnly
+        }
+      }
+
+      appX
+      {
+
+      }
+    }//as
+
+    SubSystem1
+    {
+
+    }
+
+    SubSystemX
+    {
+
+    }
+
+  }}}//YourCompany
+}
