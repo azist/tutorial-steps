@@ -1,0 +1,55 @@
+﻿/*
+  This file declares config-based security manager which is the most primitive IDP which authenticates
+  and authorizes users right from this config file.
+
+  Use `phash` to generate passwords:
+
+  $dotnet phash.dll -pp -st 20 -lvl Normal -alg kdf -ne
+  *******
+
+  Hashed password:
+  {
+    "alg": "KDF",
+    "fam": "Text",
+    "h": "..................",
+    "s": ".................."
+  }
+
+
+  WARNING:
+    KDF algorithm should ONLY be used for interactive user logins and not for API authentication as it takes significant time
+    to check KDF hash. APIs should use OAuth/Bearer scheme for authentication but should you need to test a simple API prototype,
+    then use a "NOP" password algorithm (unsecure). Never use NOP in production
+*/
+security
+{
+  _include{ name=cryptography file="./cfg/sec/cryptography.laconf" }
+
+  users
+  {
+    user
+    {
+      name=root
+      description="Root User"
+      status=system //maximum security - bypasses all permission checks
+      id=root
+      password=$(/machines/security/root-password)
+      //rights{ }  //system users do not need any right assignment
+    }
+
+    user
+    {
+      name=xyzclient
+      description="Test User"
+      status=user
+      id=xyzclient
+      password=$(/machines/security/test-client-password)
+
+      _include
+      {
+        name=rights
+        file="./cfg/sec/rights-api-caller.laconf"
+      }
+    }
+  }//users
+}

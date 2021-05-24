@@ -32,7 +32,24 @@
   </web>
 
 
+  <!--
+    WARNING!!!
+    The values under "security" section below in this file are HARD-CODED and used ONLY for illustration purposes!!!
+    These values should never be used in any of your real systems, they should never be stored in
+    public source control like GitHub etc.
+
+    In real systems store the values in you secret store, e.g. secure Octopus deploy var interpolation syntax:
+    <root-password>#{security-root-password}</root-password>
+  -->
   <security>
+
+    <root-password>  <!-- !!!EXAMPLE ONLY!!! Plain password:  b8ijU02KiqWEr7m0x0_14Zlqp5 -->
+    {"alg":"KDF","fam":"Text","h":"X8EhnBtCIzc0lzvPoRIoVUsepXuz2gt-h8cDWZZKvGc","s":"lIi1rOXGYtcUFovPOuuO5rWwwVHFIh__ZhoAOpIzIQI"}
+    </root-password>
+    <test-client-password> <!-- !!!EXAMPLE ONLY!!!  Plain password:  thejake -->
+    {"alg":"NOP","fam":"Text","h":"dGhlamFrZQ=="}
+    </test-client-password>
+
     <cryptography>
       <!--
         You can generate keys by using 'phash' utility

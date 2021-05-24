@@ -34,12 +34,19 @@ rights
   }//Azos
 
 
+  //Section specific to your business
   YourCompany{ Security{ Permissions{
 
     //Generic api caller grant- protect you base controllers with this permission
     ApiCaller{ level=1000 }
 
-    As // Application system
+    // Application systems represent a group of logical "applications" provided by your business.
+    // Application systems bundle services on behalf of "products".
+    // You can re-package various constituent services under various "brands" and even purposes
+    // For example, a "National Doctor Catalog" may be offered as a part of "Hospital EMR" and "Long Term Care Census"
+    // where the later represent application systems
+    // Here, you include permissions SPECIFIC to applications (product offering) as a whole, not its specific functions
+    As
     {
       app1
       {
@@ -59,6 +66,7 @@ rights
       }
     }//as
 
+    //General sub-systems of your business, such as aforementioned "National Doctor Catalog"
     SubSystem1
     {
 
