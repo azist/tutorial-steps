@@ -1,0 +1,14 @@
+﻿/*
+  Object store manages session and other transitive state (e.g. app term) between process restarts
+*/
+objects
+{
+  name="objects"
+  log-level=$(/machine/$log-level-comp)
+
+  guid=$(/$guid)
+  object-life-span-ms=600000 //10 minutes
+  bucket-count=256//controls interlocking
+
+  provider { name="NOP" type="Azos.Apps.Volatile.NOPObjectStoreProvider, Azos" }
+}
