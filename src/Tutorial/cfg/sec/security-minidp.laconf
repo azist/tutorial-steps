@@ -1,0 +1,83 @@
+﻿/*
+  This file declares security manager based on MinIdp server
+*/
+security
+{
+  _include{ name=cryptography file="./cfg/sec/cryptography.laconf" }
+
+  //use `MinIdp` Identity Provider Server
+  type="Azos.Security.MinIdp.MinIdpSecurityManager, Azos"
+  realm=api //realm = catalog id in the security catalog
+
+  //This store acts as a caching server which "remembers" authentication outcome for
+  //up to the specified period of time
+  store
+  {
+    type="Azos.Security.MinIdp.CacheLayer, Azos"
+
+    //Caching is used to reduce latency and network traffic between this app and MiIdp server
+    //caching significantly improves performance for chatty APIs e.g. when a customers make
+    //API calls they typically use the same Bearer token which gets checked with EVERY call.
+    //This cache is of much less help when different principals authenticate
+    max-cache-age-sec=90 // 0 disables cache altogether.
+
+    //Actual store which calls remote IDP server
+    store
+    {
+      type="Azos.Security.MinIdp.WebClientStore, Azos"
+      //log-level="Debug"  //useful when trying to set-up the system
+
+      //Protects internal IDP traffic with app-level message cryptography
+      msg-algo="internal.idpmsg"
+
+      idp-server-address="minidp"
+
+      service
+      {
+        default-network="internoc"
+        default-binding="http"
+        default-timeout="5379"
+
+        auth-scheme=$(/machine/services/minidp/$auth-scheme)
+        auth-header=$(/machine/services/minidp/$auth-value)
+
+        endpoint //Primary
+        {
+          network=$(../$default-network)
+          binding=$(../$default-binding)
+          //timeout-ms=4000 //// will use default
+          remote-address=$(../../$idp-service-address)
+          contract="IMinIdpStore"
+          shard=0 //BALANCER: Shard 0
+          shard-order=0 // Primary Server
+
+          enable-distributed-call-flow=true //teleport call flow information across process boundaries
+          uri="$(/machine/services/minidp/shard-0-first)/server/" // physical service endpoint address
+
+          accept-json=true
+          auth-scheme=$(../$auth-scheme)
+          auth-header=$(../$auth-header)
+        }
+
+        endpoint //Secondary - a backup for primary
+        {
+          network=$(../$default-network)
+          binding=$(../$default-binding)
+          //timeout-ms=4000 //// will use default
+          remote-address=$(../../$idp-service-address)
+          contract="IMinIdpStore"
+          shard=0 //BALANCER: Shard 0
+          shard-order=1 // SECONDARY Server
+
+          enable-distributed-call-flow=true
+          uri="$(/machine/services/minidp/shard-0-second)/server/"
+
+          accept-json=true
+          auth-scheme=$(../$auth-scheme)
+          auth-header=$(../$auth-header)
+        }
+      }//service
+
+    }
+  }
+}

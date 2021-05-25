@@ -1,0 +1,30 @@
+﻿/*
+  Glue is used for direct IPC using sockets.
+  You can mix-in glue to connect to application consoles using direct TCP connection
+
+  $ascon host:port
+*/
+glue
+{
+  log-level=$(/machine/$log-level-comp)
+
+  client-log-level=$($log-level)
+  server-log-level=$($log-level)
+
+  bindings
+  {
+    binding{ name="sync"    type="Azos.Glue.Native.SyncBinding, Azos" }
+    binding{ name="async"   type="Azos.Glue.Native.MpxBinding, Azos" }
+    binding{ name="appterm" type="Azos.Sky.Glue.AppTermBinding, Azos.Sky" }
+  }
+
+  servers
+  {
+    server
+    {
+      name="appterm"
+      node="appterm://*:$(!/services/$appterm-tcp)"
+      contract-servers="Azos.Apps.Terminal.AppRemoteTerminal, Aozs.Sky"
+    }
+  }
+}
