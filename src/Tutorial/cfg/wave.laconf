@@ -1,0 +1,86 @@
+﻿/*
+  WAVE is a web server call port
+*/
+wave
+{
+  //This variable is used by reverse proxies: a typical header to submit IP address of a real caller
+  //into the upstream origin server
+  real-ip-hdr="X-Forwarded-For"
+
+  //You can configure the system to include content-based hash into path
+  //to prevent content getting stuck in caches. This is needed for some CDNs (content delivery networks)
+  version-segment-prefix="@"
+
+  //Caching policy
+  cache-max-age-sec=432000//5 days
+
+
+  server
+  {
+    //Declares listener prefixes
+    prefix
+    {
+      //Take primary listener address from the node called "main"
+      name="$(/machine/web/listen[name=main])"
+    }
+
+    //The server uses the named header to get real caller origin IP address as seen by the reverse proxy
+    gate-caller-real-ip-address-header=$(/wave/$real-ip-hdr)
+
+    //Server-wide handler in case lower error filter is not installed
+    default-error-handler
+    {
+      //The following lines define when errors are shown in full detail "with dump" only to local callers
+      //or to everyone - this depends on deployment environment
+      show-dump {  match{name=all is-locall=$(/machine/web/$errors-local-only)}      }
+      log       {  match{name=all is-locall=$(/machine/web/$log-errors-local-only)}  }
+    }
+
+    //Wave has a built-in "Gate" which is a WAF = Web Application Firewall
+    _include{ file="./cfg/wv/gate.laconf" }
+
+    dispatcher
+    {
+      _include{ file="./cfg/wv/error-filter.laconf" }
+      _include{ file="./cfg/wv/realip-filter.laconf" }
+      _include{ file="./cfg/wv/callflow-filter.laconf" }
+      _include{ file="./cfg/wv/session-filter.laconf" }
+      _include{ file="./cfg/wv/static-content.laconf" }
+
+      handler
+      {
+        name="apis"
+        order=1000000
+        type="Azos.Wave.Handlers.CompositeTypeHandler, Azos.Wave"
+        match{ name="any.request" }
+
+        /* Add dynamic-specific filters here*/
+
+
+        handler
+        {
+          name="system.apis"
+          type="Azos.Wave.Handlers.MvcHandler, Aozs.Wave"
+          order=10
+          type-location{ name="tutorial" assembly="Tutorial.Server.dll" ns{name="Tutorial.Server.Web.SystemController*"} }
+          type-location{ name="sky"      assembly="Azos.Sky.dll"        ns{name="Azos.Apps.Terminal.Web*"} }
+          log-level=$(/machine/$log-level-comp)
+
+          //Default favicon - assumes "Info" controller with GET "favicon" action
+          match
+          {
+            oder=0
+            path="/favicon.ico"
+            var{ name="type" default="info"}
+            var{ name="mvc-action" default="favicon"}
+          }
+
+          match{ order=10 path="/system/{type}/{mvc-action}/{id}"  var{query-name="*"}}
+        }
+
+        //Include app-specific APIs
+        _include{ file="/cfg/$(/$id)/wv-apis.laconf"}
+      }//apis
+    }//dispatcher
+  }//server
+}//wave
