@@ -1,0 +1,50 @@
+﻿error-filter
+{
+  filter
+  {
+    name="error"
+    order=-1000000
+    type="Azos.Wave.Filters.ErrorFilter, Azos.Wave"
+    custom-error-page-type="Tutorial.Web.MyErrorPage, Tutorial"
+
+    //Controls if we want to show detailed error dumps
+    show-dump{ match{ is-local=$(/macine/web/$errors-local-only)} }
+
+    //Where do we want to send users on security errors
+    //security-redirect-url="/user/login"
+    //security-redirect-target="target"
+
+    /*
+    //Detailed redirect rules are beneficial for various integrations (e.g. 3rd party vendors
+    security-redirect
+    {
+      match
+      {
+        path="integration/{*path}"
+        var {name="security-redirect-url" default="/integration/login"}
+      }
+    }
+    */
+
+    //Error logging
+    log
+    {
+      match{ name="all" } //for now we can log ALL errors, below is an example how to control logging with matches
+
+      |* //Example of how to log all except for 404 and Authorization-related errors
+      match
+      {
+        name="rules"
+        type="Azos.Wave.CompositeWorkMatch, Azos.Wave"
+        and
+        {
+           match{name="butSecurity" type="Azos.Wave.NotAuthorizationExceptionMatch, Azos.Wave"}
+           match{name="but404"      type="Azos.Wave.HttpResponseStatusCodeMatch, Azos.Wave" is-not=true code=404}
+        }
+        //or{ }
+      }
+      *|
+    }
+
+  }
+}

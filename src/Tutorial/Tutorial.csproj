@@ -17,7 +17,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Web\Error.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Web\Error.html" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Azos" Version="$(AzosVersion)" />
+    <PackageReference Include="Azos.Web" Version="$(AzosVersion)" />
+    <PackageReference Include="Azos.Wave" Version="$(AzosVersion)" />
+    <PackageReference Include="Azos.Sky" Version="$(AzosVersion)" />
   </ItemGroup>
 
   <ItemGroup>
