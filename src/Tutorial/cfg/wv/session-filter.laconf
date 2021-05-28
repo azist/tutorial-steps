@@ -1,0 +1,47 @@
+﻿session
+{
+  filter
+  {
+     order=200
+     name="session"
+     type="Azos.Wave.Filters.AuthorizeSessionFilter, Azos.Wave"
+
+     //Enable database muti-targeting
+     //the callers can supply this header with data context name
+     data-context-header="wv-data-ctx"
+
+     //An alias to Authorization header
+     //This can be useful for browser-based sticky headers
+     alt-authroization-header="wv-pass"
+
+     //When set, enables gating of bad auth by bumping the named variable by +1
+     gate-bad-auth-var="session_badAuth" //see gate.laconf
+
+     //When set, forces the treatment of Bearer scheme token starting with this prefix as Basic
+     //this is used for some integrations which are not capable of setting proper auth scheme
+     //bearer-basic-prefix="treat-as-basic--"
+
+     //You can temporarily turn this on to pretend that callers have sent this in
+     //used for temp testing od clients and should always be disabled in prod
+     //////// default-impersonation-authorization-header-value="Basic xxxxxxxxxxxxx"
+
+     //WARNING!!!
+     //System tokens should never be enabled for public API surfaces.
+     //When set to `true` enables the `Authorization: Systoken` scheme which is used for
+     //impersonation of user accounts inside of the cluster perimeter only!
+     //Any external/public system accessing the API from the Internet should have
+     //this property disabled.
+     enable-system-tokens-default=false
+     enable-system-tokens=$(#/app-settings/security/$wv-enable-system-tokens;$enable-system-tokens-default)
+  }
+
+  //An example of custom filter which sets conversion rules for dates, percentages, etc.
+  //The caller can pass a header value for `wv-data-convert` to ask for certain formatting e.g. "12" vs "0.12"
+  filter
+  {
+    order=201
+    name="dconv"
+    type="Tutorial.Web.DataConversionFilter, Tutorial"
+    data-conversion-header="wv-data-convert"
+  }
+}

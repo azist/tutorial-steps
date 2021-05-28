@@ -1,0 +1,63 @@
+﻿//Web Application Firewall
+waf
+{
+  /*
+    The gate is a rule machine which inspect incoming web traffic. The state is mutated by application
+    changing variables. Gate rules can grant/deny traffic based on the app variables.
+    You can also set auto-decay rules for variables which indicate various violation counts.
+    The variable values are maintained by caller IP.
+    Note: If the gate is behind the reverse proxy, you need to set-up proper `X-Forwarded-For` header
+    otherwise all traffic will be deemed to have arrived from the same IP of the reverse proxy
+  */
+  gate
+  {
+    name="waf"
+    enabled=true
+
+    incoming
+    {
+      default-action=allow// vs deny
+
+
+      var-def{name="oauth_Errors" decay-by=5 interval-sec=60}
+      rule
+      {
+        name="oauthErrors"
+        order=0
+        action=deny
+        from-expression="$oauth_Errors>12"
+      }
+
+      var-def{name="oauth_InvalidUser" decay-by=1 interval-sec=20}
+      rule
+      {
+        name="oauthBadUsers"
+        order=0
+        action=deny
+        from-expression="$oauth_InvalidUser>=10"
+      }
+
+      var-def{name="$session_badAuth" decay-by=3 interval-sec=60}
+      rule
+      {
+        name="sessionBadAuth"
+        order=0
+        action=deny
+        from-expression="$session_badAuth>=15"
+      }
+
+      /*
+      rule { name="all-odessa" order=1 action=allow from-addrs="12.12.*" }
+      rule { name="all-odessa" order=2 action=deny  from-addrs="1.2.3.*" from-groups="hackers;greedy" }
+
+      group
+      {
+        name="hackers"
+        address{name="BadGuy1" patterns="1.2.*"}
+        address{name="BadGuy2" patterns="127.0.*.0"}
+      }
+      */
+
+    }
+  }
+}
