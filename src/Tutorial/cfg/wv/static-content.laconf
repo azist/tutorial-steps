@@ -1,0 +1,39 @@
+﻿/*
+  Defines how to handle static content
+*/
+static-content-handlers
+{
+  //stock content serves stock framework scripts, images and styles
+  handler
+  {
+    order=300
+    name="StockContentServer"
+    type="Azos.Wave.Handlers.StockContentSiteHandler, Azos.Wave"
+    cache-control{ max-age-sec=$(/wave/$cache-max-age-sec) }
+    version-segment-prefix=$(/wave/$version-segment-prefix)
+
+    match{ path="/static/stock/{*path}"}
+  }
+
+  //The UX application is served from here via CDN (Content delivery Network)
+  handler
+  {
+    order=310
+    name="FileServer"
+    type="Azos.Wave.Handlers.FileDownloadHandler, Azos.Wave"
+    use-portal-hub=false //serve content in the scope of portal sub-folders
+    cache-control{  max-age-sec=$(/wave/$cache-max-age-sec) }
+    throw=true //throw exceptions instead of just returning error text inline
+    version-segment-prefix=$(/wave/$version-segment-prefix)
+
+    match
+    {
+      name=static
+      order=1
+      path="/static/{*filePath}"
+      var{ name="attachment" default=false}//file server used for CDN, no need for content disposition header
+      var{ name="chunked" query-name="c" default=false}//chunked encoding
+    }
+  }
+
+}

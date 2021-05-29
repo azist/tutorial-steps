@@ -44,4 +44,13 @@
     type="Tutorial.Web.DataConversionFilter, Tutorial"
     data-conversion-header="wv-data-convert"
   }
+
+  ////Measures call latency
+  //filter
+  //{
+  //  order=210
+  //  name="latency"
+  //  type="Tutorial.Web.LatencyInstrumentationFilter, Tutorial"
+  //  emit-api-call-event=true
+  //}
 }

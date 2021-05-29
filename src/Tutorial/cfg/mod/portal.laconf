@@ -1,0 +1,45 @@
+﻿/*
+  Declares portal hub - a registry of portals (web sites)
+*/
+portal-hub
+{
+
+  module
+  {
+    name='portal.hub'
+    type='Azos.Wave.PortalHub, Azos.Wave'
+
+    log-level=$(/machine/$log-level-comp)
+
+    content-file-system
+    {
+      type='Azos.IO.FileSystem.Local.LocalFileSystem, Azos'
+      root-path=$(/paths/$www-static)
+    }
+
+/*
+    portal //Line2 main business
+    {
+      name="main"
+      description="Line2 Products"
+      type="Business.Line2.Web.MainPortal, Business.Line2"
+      default=true
+      offline=false
+      primary-root-uri="https://line2.com"
+
+      robot-text="User-agent: *\n Allow: /"
+
+      theme
+      {
+        name="line2"
+        type="Business.Line2.Web.MainTheme, Business.Line2"
+        default=true
+        color-bg="#f4f4f4"
+        color="#373737"
+      }
+    }
+*/
+  }//module
+}
+
+

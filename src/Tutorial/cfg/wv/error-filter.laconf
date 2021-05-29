@@ -8,7 +8,7 @@
     custom-error-page-type="Tutorial.Web.MyErrorPage, Tutorial"
 
     //Controls if we want to show detailed error dumps
-    show-dump{ match{ is-local=$(/macine/web/$errors-local-only)} }
+    show-dump{ is-local=$(/machine/web/$errors-local-only)}
 
     //Where do we want to send users on security errors
     //security-redirect-url="/user/login"

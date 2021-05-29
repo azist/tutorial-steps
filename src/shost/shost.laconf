@@ -1,0 +1,82 @@
+﻿
+//This is an example of app config which uses `_includes` and `machine` config
+//manifest which is host/computer dependent. During DevOps/Container publish
+//the machine file gets processed by the elevate tool (e.g. Octopus)
+app
+{
+  //Instruct the system to include file references in '_include' sections
+  //this way we do not need to re-declare many constituent parts of config
+  process-includes="_include"
+
+
+  //The machine config file is taken by default from `xyz-machine.{AZ_MACHINE_CONFIG_SUFFIX}.xml` unless
+  //an override is set for integration testing. The syntax below is based on config nav coalescing:
+  //the system tries to read from left to right tripping on a first value which exists
+  machine-config-suffix=$(~AZ_MACHINE_CONFIG_SUFFIX)
+  machine-config-suffix-default=.local
+  _include
+  {
+    name=machine //the referenced file as `machine` section instead of this `_include` section here
+    file="./machine$(#/$machine-config-suffix-override;#/$machine-config-suffix;#/$machine-config-suffix-default).xml"
+  }
+
+  //in server applications we want to use invariant culture across all code
+  //unless some specific places use culture for other purposes
+  force-invariant-culture=true
+
+
+
+  id=shost
+  guid="C393633F-F8AA-4527-A7C0-A068E4A8FF6A"
+  name="shost"
+  description="Server host"
+  copyright="Azos project"
+  environment-name=$(/machine/$environment-name)
+
+
+  //We want to reuse many parts of this config so we will start using includes
+
+  //Common app paths
+  _include{ name=paths file="./cfg/paths.laconf"}
+
+  //Common app logging
+  _include{ name=log file="./cfg/log.laconf"}
+
+  //Common app scheduler/jobs/timer
+  _include{ name=event-timer file="./cfg/event-timer.laconf"}
+
+
+  //By default this will be used for your primary application listener
+  //If you run on windows you will need to run this command
+  //  1). Open command prompt as admin
+  //  2). Run:  c:\> netsh http add urlacl url=http://+:8080/ user=Everyone
+  http-listen-port="8080"
+
+  wave
+  {
+    server
+    {
+      //Listen on
+      prefix {  name="$(/machine/web/listen[name=main])" }
+
+      //default-error-handler { show-dump{match{name=all}}    log{match{name=all}} }
+
+      dispatcher
+      {
+        _include{ file="./cfg/wv/error-filter.laconf" }
+        handler
+        {
+          name="mvc"
+          type="Azos.Wave.Handlers.MvcHandler, Azos.Wave"
+          order=10
+          type-location{ name="tutorial" assembly="Tutorial.dll" ns{name="Tutorial.Web.Controllers*"} }
+          log-level=$(/machine/$log-level-comp)
+
+          match{ order=10 path="/{type=Welcome}/{mvc-action=Index}/{id}"  var{query-name="*"}}
+        }
+      }//dispatcher
+    }//server
+  }//wave
+
+}
+

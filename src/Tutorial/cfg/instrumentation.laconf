@@ -1,0 +1,20 @@
+﻿/*
+  APM Instrumentation service gathers and manages data: events and gauges
+*/
+instrumentation
+{
+  name="instrumentation"
+  enabled=true
+  interval-ms=1000
+  os-interval-ms=750//0 = disable OS CPU/RAM sampling
+  self-instrumented=false//instrument self
+  //max-record-count=1000000
+  result-buffer-size=8000
+
+  provider
+  {
+    name="log"
+    type="Azos.Instrumentation.LogInstrumentationProvider, Azos"//writes instrumentation data into LOG
+  }
+}
+

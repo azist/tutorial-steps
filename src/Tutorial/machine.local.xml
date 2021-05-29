@@ -27,8 +27,8 @@
   log-level-comp="Debug"
   log-level-data="None">
 
-  <web errors-local-only="" log-errors-local-only="">
-    <listen name="main">http://+:$(/$http-listen-port)</listen>
+  <web errors-local-only="false" log-errors-local-only="false">
+    <listen name="main">http://+:$(/$http-listen-port)/</listen>
   </web>
 
 

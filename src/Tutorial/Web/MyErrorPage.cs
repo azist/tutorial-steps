@@ -21,7 +21,8 @@ namespace Tutorial.Web
   {
     public MyErrorPage(Exception error, bool showDump)
     {
-
+      Error = error;
+      ShowDump = showDump;
     }
 
     public readonly Exception Error;
@@ -38,7 +39,7 @@ namespace Tutorial.Web
                        .Replace("{{TIME}}", Ambient.UTCNow.ToString("yyyy-MM-ddTHH:mm:ssZ", System.Globalization.CultureInfo.InvariantCulture))
                        .Replace("{{COPYRIGHT}}", Context.App.Copyright);
 
-      if (ShowDump && Error!=null)
+      if (/*ShowDump &&*/ Error!=null)
       {
         var details = dumpError(Error);
         content = content.Replace("{{DETAILS}}", details);

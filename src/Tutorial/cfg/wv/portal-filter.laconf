@@ -1,0 +1,24 @@
+﻿/*
+  Mounts filter which injects portal context of portal hub module
+*/
+portal-filter
+{
+  /*
+  filter
+  {
+    name="Portal"
+    type="Azos.Wave.Filters.PortalFilter, Azos.Wave"
+    order=100
+
+    match{ order=100 hosts="main.BUSINESS1.local"  var{ name="portal-name" default="main"}}
+    match{ order=110 hosts="BIZ2.com"              var{ name="portal-name" default="main"}}
+    match{ order=150 hosts="ANOTHERBIZs.com"       var{ name="portal-name" default="main"}}
+
+    match{ order=200 hosts="line2.local"      var{ name="portal-name" default="line2"}}
+    match{ order=210 hosts="odessa.line2-products.com"    var{ name="portal-name" default="line2"}}
+
+    match{ order=300 hosts="mcr.odesky.net"  var{ name="portal-name" default="odesky"}}
+    match{ order=310 hosts="odesky.net"      var{ name="portal-name" default="odesky"}}
+  }
+  */
+}
