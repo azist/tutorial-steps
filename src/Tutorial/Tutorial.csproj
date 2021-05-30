@@ -17,10 +17,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="BUILD_INFO.txt" />
     <None Remove="Web\Error.html" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="BUILD_INFO.txt" />
     <EmbeddedResource Include="Web\Error.html" />
   </ItemGroup>
 
@@ -42,5 +44,19 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+
+  <PropertyGroup>
+    <AzosPackagePath>$(NuGetPackageRoot)azos\$(AzosVersion)\</AzosPackagePath>
+  </PropertyGroup>
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Message Importance="High" Text="Prebuild AZOS VERSION: $(AzosVersion)" />
+    <Message Importance="High" Text="Prebuild AZOS PATH: $(AzosPackagePath)" />
+    <Exec Command="$(ProjectDir)_build/pre-build $(SolutionDir) $(AzosPackagePath) $(ProjectDir) $(ConfigurationName) $(TargetDir)" />
+  </Target>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="$(ProjectDir)_build/post-build $(SolutionDir) $(AzosPackagePath) $(ProjectDir) $(ConfigurationName) $(TargetDir)" />
+  </Target>
 
 </Project>
