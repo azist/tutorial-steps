@@ -1,0 +1,77 @@
+﻿/*
+  This file declares security manager based on MinIdp server
+*/
+security
+{
+  cryptography
+  {
+    _include{ file="./cfg/sec/cryptography.laconf" }
+    _include{ file="./cfg/esgov/cryptography-minidp-server.laconf" }
+  }
+
+  //use `MinIdp` Identity Provider Server
+  type="Azos.Security.MinIdp.MinIdpSecurityManager, Azos"
+  realm=api //realm = catalog id in the security catalog
+
+  //This store acts as a caching server which "remembers" authentication outcome for
+  //up to the specified period of time
+  store
+  {
+    type="Azos.Security.MinIdp.CacheLayer, Azos"
+
+    //Caching is used to reduce latency and network traffic between this app and MiIdp server
+    //caching significantly improves performance for chatty APIs e.g. when a customers make
+    //API calls they typically use the same Bearer token which gets checked with EVERY call.
+    //This cache is of much less help when different principals authenticate
+    max-cache-age-sec=30 // 0 disables cache altogether.
+
+    //Actual store which calls remote IDP server
+    store
+    {
+      type="Azos.Security.MinIdp.MinIdpMongoDbStore, Azos.MongoDb"
+      //log-level="Debug"  //useful when trying to set-up the system
+
+      //When you run the system for the very first time, the `root` account gets installed with SYSTEM privilege
+      //so you can log-in and set initial roles and logins for the very first time
+      //the root account will auto-expire after the specified number of hours
+      //You must set-up real logins before root expires, otherwise you will need to correct the issues manually or drop the minidp data
+      root-realm=api
+      root-login=root//name of the root login
+      //Plain: j930dnsakYjw7Y546nZ0-374
+      //Vector: {"alg":"KDF","fam":"Text","h":"o4ze2r2Fr8um9v0GwCyb0ATDpWxngEiU1CvyUkU5IfM","s":"YSixliuYFyJTzsYR8dHAhAtkhgbmA3ANd2iJ3Zuy4w0"}
+      root-pwd-vector='{"alg":"KDF","fam":"Text","h":"o4ze2r2Fr8um9v0GwCyb0ATDpWxngEiU1CvyUkU5IfM","s":"YSixliuYFyJTzsYR8dHAhAtkhgbmA3ANd2iJ3Zuy4w0"}'
+      root-login-lifetime-hours=72//how long the root account is active
+
+      //Protects internal IDP traffic with app-level message cryptography
+      msg-algo="internal.idpmsg"
+
+      //Systoken protection algorithm
+      sys-token-algo="internal.systoken"
+      sys-token-life-hrs=12.5 //12 hrs 30 minutes, then token expires
+
+      //Where Mongo is
+      remote-address="local.appliance"
+
+      //Mongo database service client
+      mongo
+      {
+        default-network="local"
+        default-binding="mongo"
+        default-timeout=5371
+
+        endpoint //Primary
+        {
+          network=$(../$default-network)
+          binding=$(../$default-binding)
+
+          remote-address=$(../../$remote-address)
+          contract="IMinIdpStore"
+          shard=0
+          shard-order=0
+
+          connect-string="mongo{ server='applicance://' db='tutorialidp' }" //<--- IDP database name
+        }
+      }//mongo
+    }//store
+  }//cache
+}//security

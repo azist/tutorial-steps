@@ -33,7 +33,7 @@ security
       description="Root User"
       status=system //maximum security - bypasses all permission checks
       id=root
-      password=$(/machines/security/root-password)
+      password=$(!/machine/security/root-password)
       //rights{ }  //system users do not need any right assignment
     }
 
@@ -43,7 +43,7 @@ security
       description="Test User"
       status=user
       id=xyzclient
-      password=$(/machines/security/test-client-password)
+      password=$(!/machine/security/test-client-password)
 
       _include
       {

@@ -2,11 +2,8 @@
   Declares cryptographic algorithms and keys for use by IDP authority -
   these are the private keys which only get deployed on the IDP origin servers.
   This file gets mixed-into sec config by IDP serve processes.
-  Note:
-   the fact of configuration snippet inclusion does not mean that the keys are deployed everywhere,
-   as the keys reside per-machine/environment and this file just provides algorithm declaration along with variable redirection
 */
-cryptography-idp-authority
+cryptography-minidp-server
 {
   /*
     Summary:

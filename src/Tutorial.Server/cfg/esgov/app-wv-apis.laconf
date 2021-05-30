@@ -1,0 +1,28 @@
+﻿app-wv-apis
+{
+  handler
+  {
+    order=500
+    name="minidp.apis"
+    type="Azos.Wave.Handlers.MvcHandler, Azos.Wave"
+    type-location{ assembly="Azos.Wave.dll" ns{ name="Azos.Security.MinIdp*"}}
+
+    log-level=$(/machine/$log-level-comp)
+
+    match{ order=1 path="/v1/minidp/{type}/{mvc-action}/{id}" var{query-name="*"} }
+    match{ order=2 path="/minidp/{type}/{mvc-action}/{id}"    var{query-name="*"} }
+  }
+
+  handler
+  {
+    order=600
+    name="es.apis"
+    type="Azos.Wave.Handlers.MvcHandler, Azos.Wave"
+    type-location{ assembly="Azos.Sky.dll" ns{ name="Azos.Sky.Identification.Server.Web*"}}
+
+    log-level=$(/machine/$log-level-comp)
+
+    match{ order=1 path="/v1/es/{type}/{mvc-action}/{id}" var{query-name="*"} }
+    match{ order=2 path="/es/{type}/{mvc-action}/{id}"    var{query-name="*"} }
+  }
+}

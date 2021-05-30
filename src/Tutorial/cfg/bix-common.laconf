@@ -1,0 +1,7 @@
+﻿//BIX = Business Information eXchange
+//High-efficiency business-oriented serialization format with change tolerance
+//Add your project common assemblies in this section
+bix-common-assemblies
+{
+  assembly{ name="Tutorial.dll" }
+}

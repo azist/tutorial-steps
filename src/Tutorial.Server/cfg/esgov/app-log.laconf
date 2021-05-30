@@ -1,0 +1,11 @@
+﻿app-log
+{
+  //Logs data into cloud chronicle
+  sink
+  {
+    order=9990
+    name="chronicle"
+    type="Azos.Sky.Log.ChronicleSink, Azos.Sky"
+    generate-failover-msg=true
+  }
+}

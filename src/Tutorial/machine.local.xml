@@ -28,7 +28,7 @@
   log-level-data="None">
 
   <web errors-local-only="false" log-errors-local-only="false">
-    <listen name="main">http://+:$(/$http-listen-port)/</listen>
+    <listen name="main">http://+:$(/services/$http-main-listen-port)/</listen>
   </web>
 
 
@@ -78,6 +78,13 @@
         <aes256-0>base64:X-it7L9oTB-P2snTm5lyCL4UBttEt4hd0sfuJuPSgdE</aes256-0>
         <aes256-1>base64:_XoYyy0ZrPuQ0HERlafMrbk1-8xC8UFVkfpHvDWDY-8</aes256-1>
       </idpmsg>
+
+      <!-- You only need systoken on ESGOV, it is included here for tutorial simplicity as SYSTOKEN keys MAY NOT be deployed on other hosts -->
+      <idpsystoken>
+        <hmac512-0>base64:TCh_K6Ih8DSCQjDiour9Kw46vUCNsRDhX8WlmrKIYvhAazp3H5s_CP4c_cYVtfPNp6hYSBG3xny3fDMOdMwozQ</hmac512-0>
+        <aes256-0>base64:X-it7L9oTB-P2snTm5lyCL4UBttEt4hd0sfuJuPSgdE</aes256-0>
+        <aes256-1>base64:_XoYyy0ZrPuQ0HERlafMrbk1-8xC8UFVkfpHvDWDY-8</aes256-1>
+      </idpsystoken>
     </cryptography>
   </security>
 
@@ -107,5 +114,14 @@
       <secondary>connect_string</secondary>
     </context1>
   </connect-strings>
+
+  <gdid-authority ids="$(AZ_GDID_AUTHORITY_IDS)">
+  Use comma-separated list of hex values e.g.:  `1,3,7`  or `a,b,c,d,e,f`
+
+  Attention!!!
+  Gdid authorities generate globally-unique blocks of sequences used as keys thorough the system.
+  The Authority IDs are used as discriminator in cloud systems - they should NEVER INTERSECT.
+  Wrong setup in this section may lead to duplicate ID generation
+  </gdid-authority>
 
 </machine>

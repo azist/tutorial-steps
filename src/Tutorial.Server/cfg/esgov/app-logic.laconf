@@ -1,0 +1,39 @@
+﻿app-logic
+{
+  //Client to send log data to log chronicle
+  _include{ file="./cfg/mod/chronicle-client.laconf/"}
+
+  //Mongo DB appliance for IDP
+  _include{ file="./cfg/mod/mongo-bundled-appliance.laconf/"}
+
+  //GDID Authority (Global Distributed ID generator)
+  module
+  {
+    name="gdid.authority"
+    type="Azos.Sky.Identification.Server.GdidAuthorityModule, Azos.Sky"
+    log-level=$(/machine/$log-level-comp)
+
+    //DANGER: Any invalid setting here (such as disk path change or ID-reassignment
+    //may result in primary key duplication. Design and plan your changes very thoroughly
+    //before making any changes here
+    authority
+    {
+      authority-ids=$(!/machine/gdid-authority/$ids)
+
+      persistence
+      {
+        location
+        {
+          name="local-hdd-1"
+          order=1
+          path=$(!/paths/$gdid)
+
+          ////You can disable fsync if anti-virus blocks file flush access
+          //fsync=false
+        }
+
+        //TODO: Add secondary disk persistence location on a physically-different drive
+      }
+    }
+  }
+}

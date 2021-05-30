@@ -42,6 +42,6 @@ event-timer
   }
 
   //mix-in app-specific timer events
-  //_include{ file=".cfg/$(/$id)/app-timer-events.laconf"}
+  _include{ file=".cfg/$(/$id)/app-timer-events.laconf"}
 
 }

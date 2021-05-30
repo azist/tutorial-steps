@@ -79,7 +79,7 @@ wave
         }
 
         //Include app-specific APIs
-        _include{ file="/cfg/$(/$id)/wv-apis.laconf"}
+        _include{ file="/cfg/$(/$id)/app-wv-apis.laconf"}
       }//apis
     }//dispatcher
   }//server

@@ -21,7 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="cfg\esgov\" />
     <Folder Include="cfg\memoir\" />
     <Folder Include="Web\SysControllers\" />
   </ItemGroup>

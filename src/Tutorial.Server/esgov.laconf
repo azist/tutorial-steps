@@ -1,13 +1,7 @@
-﻿
-//This is an example of app config which uses `_includes` and `machine` config
-//manifest which is host/computer dependent. During DevOps/Container publish
-//the machine file gets processed by the elevate tool (e.g. Octopus)
+﻿// ESGOV - Enterprise Services Governor
 app
 {
-  //Instruct the system to include file references in '_include' sections
-  //this way we do not need to re-declare many constituent parts of config
   process-includes="_include"
-
 
   //The machine config file is taken by default from `xyz-machine.{AZ_MACHINE_CONFIG_SUFFIX}.xml` unless
   //an override is set for integration testing. The syntax below is based on config nav coalescing:
@@ -24,23 +18,49 @@ app
   //unless some specific places use culture for other purposes
   force-invariant-culture=true
 
-
-
-  id=s02
-  name="s02-cfglog"
-  description="My config and logging test application" //access this `app.description`
+  id=esgov
+  name=$($id)
+  guid="FD5C5946-FE28-4DA3-ACB1-A0F9DFCD1BBF"
+  description="ES Governor"
   copyright="Azos project" //access this `app.Copyright`
   environment-name=$(/machine/$environment-name)
 
+  app-settings
+  {
+    security
+    {
+      //This is an internal-only application which support systoken impersonation
+      wv-enable-system-tokens=true
+    }
+  }
 
-  //We want to reuse many parts of this config so we will start using includes
+  services
+  {
+    http-main-listen-port=9000//ESGOV primary API listener
+    appterm-tcp=7700//Glue app terminal
+    mongo-appliance-port=37017//ESGOV mongo db server listener
+  }
 
-  //Common app paths
-  _include{ name=paths file="./cfg/paths.laconf"}
 
-  //Common app logging
-  _include{ name=log file="./cfg/log.laconf"}
+  //BIX data schemas registration
+  azos-serialization-bix
+  {
+    _include{ file="./cfg/bix-common.laconf"}
 
-  //Common app scheduler/jobs/timer
-  _include{ name=event-timer file="./cfg/event-timer.laconf"}
+    //app specific BIX types
+    assembly{ name="Tutorial.Server.dll" }
+  }
+
+  _include{ name=paths            file="./cfg/paths.laconf"} //Common app paths
+  _include{ name=log              file="./cfg/log.laconf"} //Common app logging
+  _include{ name=instrumentation  file="./cfg/instrumentation.laconf"} //Instrumentation providers
+  _include{ name=modules          file="./cfg/modules.laconf"} //Application modules/logic
+
+  _include{ name=object-store     file="./cfg/object-store.laconf"} //Stores volatile app state
+  _include{ name=data-store       file="./cfg/data-store.laconf"} //Data store
+  _include{ name=glue             file="./cfg/glue.laconf"} //IPC mechanisms
+  _include{ name=event-timer      file="./cfg/event-timer.laconf"} // Event timer/job scheduler (e.g. cleanup logs)
+  _include{ name=wave             file="./cfg/wave.laconf"} //HTTP Api port
+
+  _include{ name=security         file="./cfg/esgov/security-minidp-server.laconf"} // EsGov hosts MinIdpServer
 }
