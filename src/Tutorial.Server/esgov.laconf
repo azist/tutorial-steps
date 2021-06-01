@@ -22,7 +22,7 @@ app
   name=$($id)
   guid="FD5C5946-FE28-4DA3-ACB1-A0F9DFCD1BBF"
   description="ES Governor"
-  copyright="Azos project" //access this `app.Copyright`
+  copyright="Azos project"
   environment-name=$(/machine/$environment-name)
 
   app-settings

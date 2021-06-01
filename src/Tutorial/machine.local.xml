@@ -41,7 +41,7 @@
     In real systems store the values in you secret store, e.g. secure Octopus deploy var interpolation syntax:
     <root-password>#{security-root-password}</root-password>
   -->
-  <security>
+  <security  cfg-file-suffix="local">
 
     <root-password>  <!-- !!!EXAMPLE ONLY!!! Plain password:  b8ijU02KiqWEr7m0x0_14Zlqp5 -->
     {"alg":"KDF","fam":"Text","h":"X8EhnBtCIzc0lzvPoRIoVUsepXuz2gt-h8cDWZZKvGc","s":"lIi1rOXGYtcUFovPOuuO5rWwwVHFIh__ZhoAOpIzIQI"}

@@ -1,0 +1,15 @@
+﻿app-wv-apis
+{
+  handler
+  {
+    order=500
+    name="chronicle.apis"
+    type="Azos.Wave.Handlers.MvcHandler, Azos.Wave"
+    type-location{ assembly="Azos.Sky.dll" ns{ name="Azos.Sky.Chronicle.Server.Web*"}}
+
+    log-level=$(/machine/$log-level-comp)
+
+    match{ order=1 path="/v1/chronicle/{type}/{mvc-action}/{id}" var{query-name="*"} }
+    match{ order=2 path="/chronicle/{type}/{mvc-action}/{id}"    var{query-name="*"} }
+  }
+}

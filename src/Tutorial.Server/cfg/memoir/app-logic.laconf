@@ -1,0 +1,8 @@
+﻿app-logic
+{
+  //Client to send log data to log chronicle
+  _include{ file="./cfg/mod/chronicle-server.laconf/"}
+
+  //Mongo DB appliance for memoir
+  _include{ file="./cfg/mod/mongo-bundled-appliance.laconf/"}
+}
