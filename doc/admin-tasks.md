@@ -110,6 +110,35 @@ manc
 }
 ```
 
+### Delete old Chronicle log data
+Connect to `memoir` admin console
+
+The delete query would work well when `u` field is indexed as described above.
+
+```
+manc
+{
+  sid=123 // use manc to lookup your component sid
+  call
+  {
+    directdb
+    {
+      s='mongo://localhost:27017'
+      d='sky_chron'
+      cmd=$'{
+        delete: "sky_log", 
+        deletes: [
+         {
+          limit: 1,//this can be either zero or 1 to delete a single document
+          q: {u: {"$lt": "mm/dd/yyyy"}}
+         } 
+        ]}'
+    }
+  }
+}
+```
+
+
 ## Bash curl loop through files
 ```bash
 #!/bin/bash
