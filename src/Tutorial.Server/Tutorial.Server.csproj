@@ -21,10 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Web\SysControllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="cfg/**/*.laconf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
