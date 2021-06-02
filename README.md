@@ -16,3 +16,6 @@ We recommend that you follow the tutorial in this order:
 8. Step 5: **[`s05-sec`]()** - Lock API access with security/permissions, add tokens
 7. Step 6: Add data store
 
+Additional resource for admin/devops:
+
+[Admin tasks](/doc/admin-tasks.md)
