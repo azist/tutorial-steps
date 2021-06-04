@@ -20,11 +20,13 @@ glue
 
   servers
   {
+    //Remote admin login console via `appterm`(tcp) binding.
+    //Use `ascon` to connect to glue endpoint
     server
     {
       name="appterm"
       node="appterm://*:$(!/services/$appterm-tcp)"
-      contract-servers="Azos.Apps.Terminal.AppRemoteTerminal, Aozs.Sky"
+      contract-servers="Azos.Apps.Terminal.AppRemoteTerminal, Azos.Sky"
     }
   }
 }

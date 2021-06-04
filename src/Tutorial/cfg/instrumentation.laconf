@@ -4,12 +4,12 @@
 instrumentation
 {
   name="instrumentation"
-  enabled=true
-  interval-ms=1000
+  enabled=true//turn-on daemon
+  interval-ms=1000//how often to reduce data
   os-interval-ms=750//0 = disable OS CPU/RAM sampling
   self-instrumented=false//instrument self
-  //max-record-count=1000000
-  result-buffer-size=8000
+  result-buffer-size=8000//circular buffer size
+  max-record-count=750000//hard limit on total size of instrumentation buffer
 
   provider
   {

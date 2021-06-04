@@ -32,7 +32,7 @@ security
 
       idp-server-address="minidp"
 
-      service
+      server
       {
         default-network="internoc"
         default-binding="http"

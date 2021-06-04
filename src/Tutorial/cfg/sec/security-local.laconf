@@ -34,7 +34,7 @@ security
       status=system //maximum security - bypasses all permission checks
       id=root
       password=$(!/machine/security/root-password)
-      //rights{ }  //system users do not need any right assignment
+      rights{ }  //system users do not need any right assignment
     }
 
     user

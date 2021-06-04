@@ -16,7 +16,7 @@
     name="memory"
     description="This sink is used as a in-memory circular buffer for getting last X log messages, e.g. you can use it for web log view admin"
     type="MemoryBufferSink" //the type name will be resolved using "type-path" specified above
-    buffer-size=1000 //log messages
+    buffer-size=1000 //circular buffer size: log messages count
   }
 
   sink
@@ -122,7 +122,7 @@ App.start: $(~App.STARTTIME)
 
     //mix-in app-specific logs, start order from 1000
     //notice that the sink is mixed-in under async sub-graph not to affect the main logging queue
-    //we declare app-specific logs in a separate file located under app-specific subfolder
+    //we declare app-specific logs in a separate file located under app-specific subdirectory
     _include{ file=".cfg/$(/$id)/app-log.laconf"}
 
     sink
