@@ -85,6 +85,12 @@
         <aes256-0>base64:X-it7L9oTB-P2snTm5lyCL4UBttEt4hd0sfuJuPSgdE</aes256-0>
         <aes256-1>base64:_XoYyy0ZrPuQ0HERlafMrbk1-8xC8UFVkfpHvDWDY-8</aes256-1>
       </idpsystoken>
+
+      <internal.oplog.beta>
+        <hmac512-0>base64:lJPVehQN781JIpcmOum3fX2ZfEcGKOyrYZhDDLeGB1OQQxmU6T8oVf0Iv0q5xlk0hJu8gWlTblKyAQLD3PqViQ</hmac512-0>
+        <aes256-0>base64:TYiy6X9MTMd3PBvRZiQ_Bkmil7VmNThx_M-ih19c4Rk</aes256-0>
+      </internal.oplog.beta>
+
     </cryptography>
   </security>
 

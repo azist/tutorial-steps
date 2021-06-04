@@ -77,4 +77,13 @@ cryptography
     hmac{ key=$(/machine/security/cryptography/jwt1/hmac512) }
   }
 
+  // Oplog archive encryption key
+  algorithm
+  {
+    name="internal.oplog.beta"
+    audience=Internal
+    type="Azos.Security.HMACAESCryptoMessageAlgorithm, Azos"
+    hmac{ key=$(/machine/security/cryptography/internal.oplog.beta/hmac512-0) }
+    aes{ key=$(/machine/security/cryptography/internal.oplog.beta/aes256-0) }
+  }
 }
