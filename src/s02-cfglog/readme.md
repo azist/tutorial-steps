@@ -73,7 +73,7 @@ This would use a different named file for app config, see this file for details:
 Start at the root application tree and carefully examine the `_include` sections with explanations.
 
 > The log files would appear under `./out/{Debug|Release}/logs/{appname}/*.log` if you do not set
-> global environment variable `AZ_TEST_ROOT`. If the var is set then the log path would be rooted
+> global environment variable `SKY_HOME`. If the var is set then the log path would be rooted
 > at that location. The system will create `logs...` directory automatically
 
 
