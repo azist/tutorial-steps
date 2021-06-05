@@ -17,6 +17,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Web\SysControllers\api_dashboard.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Web\SysControllers\api_dashboard.html" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="../Tutorial/Tutorial.csproj" />
   </ItemGroup>
 

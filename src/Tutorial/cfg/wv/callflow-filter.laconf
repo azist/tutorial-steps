@@ -1,0 +1,11 @@
+﻿callflow
+{
+  filter
+  {
+    name="callflow"
+    order=20
+    type="Azos.Wave.Filters.DistributedCallFlowFilter, Azos.Wave"
+    //Default is "wv-call-flow"
+    distributed-call-flow-header=$(/wave/$call-flow-hdr)
+  }
+}

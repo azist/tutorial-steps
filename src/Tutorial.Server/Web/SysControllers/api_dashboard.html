@@ -1,0 +1,249 @@
+﻿<!doctype html>
+<html>
+<head>
+  <title>{{NAME}} - API Dashboard</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js"></script>
+  <style>
+    canvas {
+      -moz-user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      /* max-height: 350px  */
+    }
+
+    .content {
+      width: 98%;
+      min-width: 550px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  </style>
+</head>
+
+
+<body>
+
+  <div class="content">
+    <div id="cpuram">
+      <canvas id="cnvCpu"></canvas>
+    </div>
+    <div id="latency">
+      <canvas id="cnvLatency"></canvas>
+    </div>
+    <div id="calls">
+      <canvas id="cnvCalls"></canvas>
+    </div>
+  </div>
+
+
+
+
+  <script>
+
+    function build() {
+      let ctx = document.getElementById("cnvCpu").getContext("2d");
+      let cfg = {
+        type: "line",
+        data: {
+          //labels: ["0"],
+          datasets: [{
+            label: "Cpu Usage %",
+            backgroundColor: "rgba(30, 180, 255, 0.3)",
+            borderColor: "rgb(30, 180, 255)",
+            borderWidth: 2,
+            lineTension: 0.25,
+            pointRadius: 1,
+            data: [],
+            fill: true
+          },
+          {
+            label: "Ram Usage %",
+            backgroundColor: "rgba(180, 50, 255, 0.1)",
+            borderColor: "rgba(180, 100, 255, 0.5)",
+            borderWidth: 1,
+            lineTension: 0.4,
+            pointRadius: 1,
+            data: [],
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          aspectRatio: 3.25,
+          // title: { display: true, text: "Cpu"}
+          scales: {
+            xAxes: [{ type: "time", distribution: "series", time: { unit: "instr", displayFormats: { instr: 'mm:ss.SSS' } }, display: true }],
+            yAxes: [{ display: true }]
+          }
+        }
+      };
+      window.chartCpu = new Chart(ctx, cfg);
+
+      ctx = document.getElementById("cnvLatency").getContext("2d");
+      cfg = {
+        type: "line",
+        data: {
+          //labels: ["0"],
+          datasets: [{
+            label: "Api Latency ms.",
+            backgroundColor: "rgba(50, 220, 25, 0.3)",
+            borderColor: "rgb(50, 220, 25)",
+            borderWidth: 2,
+            lineTension: 0.15,
+            pointRadius: 1,
+            data: [],
+            fill: true
+          },
+          {
+            label: "Data Latency ms.",
+            backgroundColor: "rgba(255, 12, 0, 0.1)",
+            borderColor: "rgba(255, 12, 0, 0.75)",
+            borderWidth: 1,
+            lineTension: 0,
+            pointRadius: 1,
+            data: [],
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          aspectRatio: 3.25,
+          // title: { display: true, text: "Cpu"}
+          scales: {
+            xAxes: [{ type: "time", distribution: "series", time: { unit: "instr", displayFormats: { instr: 'mm:ss.SSS' } }, display: true }],
+            yAxes: [{ type: "logarithmic", display: true, ticks: { callback: function (value, index, values) { return value.toString()} } }]
+          }
+        }
+      };
+      window.chartLatency = new Chart(ctx, cfg);
+
+      window.HISTORY_SIZE = 200;
+
+      ctx = document.getElementById("cnvCalls").getContext("2d");
+      cfg = {
+        type: "line",
+        data: {
+          //labels: ["0"],
+          datasets: [{
+            label: "Api Call count",
+            backgroundColor: "rgba(0, 220, 180, 0.3)",
+            borderColor: "rgb(0, 220, 180)",
+            borderWidth: 2,
+            lineTension: 0.15,
+            pointRadius: 1,
+            data: [],
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          aspectRatio: 3.25,
+          // title: { display: true, text: "Cpu"}
+          scales: {
+            xAxes: [{ type: "time", distribution: "series", time: { unit: "instr", displayFormats: { instr: 'mm:ss.SSS' } }, display: true }],
+            yAxes: [{ display: true }]
+          }
+        }
+      };
+      window.chartCalls = new Chart(ctx, cfg);
+    }
+
+
+    function updateCpu(data) {
+      const historySize = window.HISTORY_SIZE;
+      const labels = chartCpu.data.labels;
+      const cpuData = chartCpu.data.datasets[0].data;
+      const ramData = chartCpu.data.datasets[1].data;
+
+      data.forEach(d => {
+        // labels.push(d.at);
+        if (d.t == "CPUUsage")
+          cpuData.push({ x: d.at, y: d.v });
+        else
+          ramData.push({ x: d.at, y: d.v });
+      });
+
+      if (labels.length > historySize)
+        labels.splice(0, labels.length - historySize);
+
+      if (cpuData.length > historySize)
+        cpuData.splice(0, cpuData.length - historySize);
+
+      if (ramData.length > historySize)
+        ramData.splice(0, ramData.length - historySize);
+
+      chartCpu.update(100);
+    }
+
+    function updateLatency(data) {
+      const historySize = window.HISTORY_SIZE;
+      const labels = chartLatency.data.labels;
+      const apiData = chartLatency.data.datasets[0].data;
+      const dbData = chartLatency.data.datasets[1].data;
+
+      data.forEach(d => {
+        // labels.push(d.at);
+        if (d.t == "ApiLatency")
+          apiData.push({ x: d.at, y: d.v });
+        else
+          dbData.push({ x: d.at, y: d.v });
+      });
+
+      if (labels.length > historySize)
+        labels.splice(0, labels.length - historySize);
+
+      if (apiData.length > historySize)
+        apiData.splice(0, apiData.length - historySize);
+
+      if (dbData.length > historySize)
+        dbData.splice(0, dbData.length - historySize);
+
+      chartLatency.update(100);
+    }
+
+    function updateCalls(data) {
+      const historySize = window.HISTORY_SIZE;
+      const labels = chartCalls.data.labels;
+      const apiData = chartCalls.data.datasets[0].data;
+
+      data.forEach(d => {
+        apiData.push({ x: d.at, y: d.v });
+      });
+
+      if (labels.length > historySize)
+        labels.splice(0, labels.length - historySize);
+
+      if (apiData.length > historySize)
+        apiData.splice(0, apiData.length - historySize);
+
+      chartCalls.update(100);
+    }
+
+    let lastFetchStamp = "";
+
+    async function update() {
+      var uri = `dashboard-data?lastFetchStamp=${lastFetchStamp}`;
+      let response = await fetch(uri);
+      let got = await response.json();
+      if (!got.Ok) return;
+
+      lastFetchStamp = got.lastFetchStamp;
+
+      updateCpu(got.cpu);
+      updateLatency(got.latency);
+      updateCalls(got.calls);
+    }
+
+    window.onload = function () {
+      build();
+      update();
+      setInterval(update, 1123);
+    }
+  </script>
+
+
+  Sample Tutorial API Dashboard {{NAME}} (c) 2021 Azist
+</body>
+
+</html>

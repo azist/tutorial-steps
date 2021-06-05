@@ -6,7 +6,7 @@
      name="session"
      type="Azos.Wave.Filters.AuthorizeSessionFilter, Azos.Wave"
 
-     //Enable database muti-targeting
+     //Enable database multi-targeting
      //the callers can supply this header with data context name
      data-context-header="wv-data-ctx"
 
@@ -45,12 +45,12 @@
     data-conversion-header="wv-data-convert"
   }
 
-  ////Measures call latency
-  //filter
-  //{
-  //  order=210
-  //  name="latency"
-  //  type="Tutorial.Web.LatencyInstrumentationFilter, Tutorial"
-  //  emit-api-call-event=true
-  //}
+  //Measures call latency
+  filter
+  {
+    order=210
+    name="latency"
+    type="Tutorial.Web.LatencyInstrumentationFilter, Tutorial"
+    emit-api-call-event=true
+  }
 }

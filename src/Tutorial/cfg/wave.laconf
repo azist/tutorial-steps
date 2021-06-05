@@ -7,6 +7,9 @@ wave
   //into the upstream origin server
   real-ip-hdr="X-Forwarded-For"
 
+  //Header used to pass call-flow context between microservice hosts in cluster
+  call-flow-hdr="wv-call-flow"
+
   //You can configure the system to include content-based hash into path
   //to prevent content getting stuck in caches. This is needed for some CDNs (content delivery networks)
   version-segment-prefix="@"

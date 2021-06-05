@@ -17,7 +17,7 @@ using Azos.Wave.Templatization;
 namespace Tutorial.Web
 {
   ///<summary>
-  /// Displays Envision-branded internal login page, used for OAuth etc..
+  /// Displays branded internal login page, used for OAuth etc..
   ///</summary>
   public class TutorialLoginPage : WaveTemplate
   {

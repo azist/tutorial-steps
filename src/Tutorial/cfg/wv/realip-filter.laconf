@@ -1,0 +1,10 @@
+﻿realip
+{
+  filter
+  {
+    name="realip"
+    order=10
+    type="Azos.Wave.Filters.EffectiveCallerIPEndPointFilter, Azos.Wave"
+    real-ip-hdr=$(/wave/$real-ip-hdr)
+  }
+}

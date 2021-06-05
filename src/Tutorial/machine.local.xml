@@ -23,7 +23,7 @@
 -->
 <machine
   environment-name="dev"
-  home-path="$(~AZ_TEST_ROOT)"
+  home-path="$(~SKY_HOME)"
   log-level-comp="Debug"
   log-level-data="None">
 
@@ -121,7 +121,7 @@
     </context1>
   </connect-strings>
 
-  <gdid-authority ids="$(AZ_GDID_AUTHORITY_IDS)">
+  <gdid-authority ids="$(~SKY_GDID_AUTHORITY_IDS)">
   Use comma-separated list of hex values e.g.:  `1,3,7`  or `a,b,c,d,e,f`
 
   Attention!!!
