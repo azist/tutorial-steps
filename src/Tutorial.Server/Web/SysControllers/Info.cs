@@ -56,6 +56,15 @@ namespace Tutorial.Server.Web.SystemControllers
       }
     };
 
+
+    [Action(Name = "favicon")]
+    public void Favicon()
+    {
+      WorkContext.Response.ContentType = Azos.Web.ContentType.PNG;
+      var stream = typeof(Info).GetBinaryStream("favicon.png");
+      WorkContext.Response.WriteStream(stream);
+    }
+
     [Action, ApiCaller(ApiAccessScope.Service)]
     [ApiEndpointDoc(
       Uri = "system",
