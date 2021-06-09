@@ -26,7 +26,7 @@ cryptography-minidp-server
     The IDP authority DEFENSIVELY PROTECTS all `SysAuthToken` instances which it produces, so no other caller, EVEN WITHIN
     THE INTERNAL NOC/zone/cluster perimeter may forge such a token. No rogue process may try to manufacture such token
     as they are protected with the keys ONLY available to IDP authority and no other system node - this establishes
-    AN ADDITION SECURITY BARRIER ZONE within your internal NOC network/partition.
+    AN ADDITIONAL SECURITY BARRIER ZONE within your internal NOC network/partition.
 
     The algorithm declared herein protects the token in two ways:
      (a) Token is encrypted and unreadable

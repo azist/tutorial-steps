@@ -17,6 +17,10 @@ namespace Tutorial
   /// </summary>
   public static class Globals
   {
+    public const string CONTAINER_TECH_NONE = "NONE";
+    public const string CONTAINER_TECH_DOCKER = "DOCKER";
+
+
     /// <summary>
     /// The environment variable name which points to development source code home
     /// </summary>
@@ -27,6 +31,10 @@ namespace Tutorial
     /// </summary>
     public const string ENV_VAR_SKY_HOME = "SKY_HOME";
 
+    /// <summary>
+    /// The name of the environment variable which specified container technology name (e.g. DOCKER) if set
+    /// </summary>
+    public const string ENV_VAR_CONTAINER_TECH = "SKY_CONTAINER_TECH";
 
     /// <summary>
     /// The name of the environment variable which stores a `ushort` number used as a node discriminator within a local cluster of multiple nodes
@@ -39,6 +47,7 @@ namespace Tutorial
 
     private static string s_DevHomePath;
     private static string s_HomePath;
+    private static string s_ContainerTech;
     private static ushort? s_Discriminator;
 
     /// <summary>
@@ -84,6 +93,28 @@ namespace Tutorial
         s_HomePath = path;
 
         return path;
+      }
+    }
+
+
+    /// <summary>
+    /// Returns true if the process is hosted in container
+    /// </summary>
+    public static bool InContainer => !ContainerTechnology.EqualsOrdIgnoreCase(CONTAINER_TECH_NONE);
+
+
+    /// <summary>
+    /// Specifies a name of container technology used, or NONE
+    /// </summary>
+    public static string ContainerTechnology
+    {
+      get
+      {
+        var tech = s_ContainerTech;
+        if (tech.IsNullOrWhiteSpace()) return tech;
+
+        s_ContainerTech = Environment.GetEnvironmentVariable(ENV_VAR_CONTAINER_TECH).Default(CONTAINER_TECH_NONE);
+        return s_ContainerTech;
       }
     }
 

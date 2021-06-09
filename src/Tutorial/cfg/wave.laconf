@@ -65,7 +65,7 @@ wave
           name="system.apis"
           type="Azos.Wave.Handlers.MvcHandler, Aozs.Wave"
           order=10
-          type-location{ name="tutorial" assembly="Tutorial.Server.dll" ns{name="Tutorial.Server.Web.SystemController*"} }
+          type-location{ name="tutorial" assembly="Tutorial.Server.dll" ns{name="Tutorial.Server.Web.SysController*"} }
           type-location{ name="sky"      assembly="Azos.Sky.dll"        ns{name="Azos.Apps.Terminal.Web*"} }
           log-level=$(/machine/$log-level-comp)
 
