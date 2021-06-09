@@ -105,7 +105,7 @@ Create you own `Sink`, inject it in log graph using config type attribute refere
 programmatically by code (no config)
 
 ### Is logger synchronous? Is sink asynchronous? Why no "tasks" in sinks?
-By design. Defaul log daemon implementations are asynchrnous with a dedicated thread/queue.
+By design. Defaul log daemon implementations are asynchronous with a dedicated thread/queue.
 Sinks are ALWAYS synchronous by design. You can use "LogSink" to spawn an inner sink with its own
 asynchronous flow and graph
 
@@ -120,7 +120,7 @@ You add a sink that sends data to those services. Azos logging is very detailed 
 ### What happens if sink goes bad? Does logging stop?
 Every sink has an SLA and failover. If sink goes bad it can spill-over to its failover sink.
 You can build complex graphs with many sinks, sub-chains with their own async pipe and this 
-can get infinitly complex. Practice whos that logging to CSV text file and debug log file is very
+can get infinitly complex. Practice shows that logging to CSV text file and debug log file is very
 stable and good practice.
 
 ### How do you delete old log files/reclaim space?
@@ -132,7 +132,11 @@ or whatever other fs you may want to work with.
 Use `ArchiveLogSink` directed into a virtual file system. You can add **compression and AES encryption** as well.
 The archive format in Azos was purposely designed for huge files and being able to navigate them even if they are partially corrupted.
 
-
+### 12 Factor app says to "dump logs in console" instead of complex logging, why is the logger needed?
+The suggestion of "bare-bones" logging via STDIO is much better than no logging at all.
+However any professional server software (e.g. Kafka, DB servers et al) benefits greatly from detailed
+logging, telemetry and integration with company-wide APM. In Addition, Sky logging is used for business-related
+`oplog` - operation logging which later can be used for complex **business transaction tracing** (including **cross-server distributed tracing**), **customer billing** and other purposes
 
 
 
