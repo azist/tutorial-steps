@@ -111,7 +111,7 @@ namespace Tutorial
       get
       {
         var tech = s_ContainerTech;
-        if (tech.IsNullOrWhiteSpace()) return tech;
+        if (tech.IsNotNullOrWhiteSpace()) return tech;
 
         s_ContainerTech = Environment.GetEnvironmentVariable(ENV_VAR_CONTAINER_TECH).Default(CONTAINER_TECH_NONE);
         return s_ContainerTech;
